@@ -1,0 +1,12 @@
+{% extends 'master/layout.html' %}
+
+{% block title%}Авторизация{% endblock %}
+
+{% block content%}
+    <h1>Введите логин и пароль</h1>
+    <ul>
+        <a href="{% url 'passwordrecovery' %}"><li>Забыли пароль?</li></a>
+    </ul>
+
+    {% include 'master/return_to_main.html'%}
+{% endblock %}

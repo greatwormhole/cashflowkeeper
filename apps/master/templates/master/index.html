@@ -1,0 +1,12 @@
+{% extends 'master/layout.html' %}
+
+{% block title%}Главная страница{% endblock %}
+
+{% block content%}
+    <h1>Главная страница</h1>
+    <p>Навигация</p>
+    <ul>
+        <a href="{% url 'registration' %}"><li>Регистрация</li></a>
+        <a href="{% url 'authorisation' %}"><li>Авторизация</li></a>
+    </ul>
+{% endblock %}
