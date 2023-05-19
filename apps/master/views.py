@@ -12,3 +12,6 @@ def sign_up(request):
 
 def pass_recovery(request):
     return render(request, 'master/pass_rec.html')
+
+def to_home(request):
+    return render(request, 'home/index.html')
