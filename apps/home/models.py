@@ -1,17 +1,49 @@
 from django.db import models
+from django.contrib.auth.models import User
 
-class Additions(models.Model):
-    title = models.CharField('Название', max_length=50)
+class Transactions(models.Model):
+    user = models.ForeignKey(User, on_delete = models.CASCADE, null = True)
+    title = models.CharField('Название', max_length = 50)
+    amount = models.PositiveIntegerField('Сумма транзакции')
+    created = models.DateTimeField('Дата транзакции')
+
+    def __str__(self):
+        return self.title
 
     class Meta:
         verbose_name = "Добавление"
         verbose_name_plural = "Добавления"
 
 class History(models.Model):
-    pass
+    title = models.CharField('Название', max_length=50)
+    amount = models.PositiveIntegerField('Сумма транзакции')
+
+    def __str__(self):
+        return self.title
+
+    class Meta:
+        verbose_name = "Добавление"
+        verbose_name_plural = "Добавления"
 
 class Profile(models.Model):
-    pass
+    user = models.OneToOneField(User, on_delete = models.CASCADE)
+    title = models.CharField('Название', max_length=50)
+    amount = models.PositiveIntegerField('Сумма транзакции')
+
+    def __str__(self):
+        return self.title
+
+    class Meta:
+        verbose_name = "Добавление"
+        verbose_name_plural = "Добавления"
 
 class Statistics(models.Model):
-    pass
+    title = models.CharField('Название', max_length=50)
+    amount = models.PositiveIntegerField('Сумма транзакции')
+
+    def __str__(self):
+        return self.title
+
+    class Meta:
+        verbose_name = "Добавление"
+        verbose_name_plural = "Добавления"

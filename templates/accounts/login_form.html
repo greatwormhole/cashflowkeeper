@@ -1,0 +1,17 @@
+{% extends 'main/layout.html' %}
+
+{% block content %}
+
+<div>
+    <form method = "POST" action="">
+        {% csrf_token %}
+        {{form.as_p}}
+        <input type="submit", value = "Войти" />
+        <p>Don't have an account yet?</p>
+        <a href="{% url 'register' %}"><li>Зарегистрироваться</li></a>
+        <p>Forgot your password?</p>
+        <a href="{% url 'passwordrecovery' %}"><li>Password recovery</li></a>
+    </form>
+</div>
+
+{% endblock content %}
