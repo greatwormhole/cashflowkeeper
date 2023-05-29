@@ -7,4 +7,5 @@ urlpatterns = [
     path('statistics/', views.statistics, name = 'statistics'),
     path('history/', views.history, name = 'history'),
     path('profile/', views.profile, name = 'profile'),
+    path('add_category', views.add_category, name = 'add_category'),
 ]

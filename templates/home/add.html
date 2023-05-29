@@ -2,8 +2,20 @@
 
 {% block title%}Доходы и расходы{% endblock %}
 
-{% block content%}
 
-    <h1>Добавьте доходы и расходы</h1>
-
+{% block content %}
+    <div class="features">
+        <h1>Добавьте доходы и расходы</h1>
+        <form method="post">
+            {% csrf_token %}
+            {{ form.date }}<br>
+            {{ form.category }}<br>
+            <a href="{% url 'add_category' %}" class="btn btn-warning">Добавить категорию</a><br>
+            {{ form.amount }}<br>
+            {{ form.comment }}<br>
+            {{ form.profile }}<br>
+            <span>{{ error }}</span>
+            <button class="btn btn-success" type="submit">Добавить расход</button>
+        </form>
+        </div>
 {% endblock %}

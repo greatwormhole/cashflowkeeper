@@ -1,3 +1,5 @@
+
+
 {% load static %}
 <!DOCTYPE html>
 <html lang="ru">
@@ -10,6 +12,10 @@
     <link rel="stylesheet" href="{% static 'home/home.css' %}">
 </head>
 <body>
+    <main>
+        {% block content %}
+        {% endblock %}
+    </main>
     <aside>
         <h1>Навигация</h1>
         <ul>
@@ -22,9 +28,5 @@
         </ul>
     </aside>
     <p> В данный момент на счету __TEST__ рублей </p>
-    <main>
-        {% block content %}
-        {% endblock %}
-    </main>
 </body>
 </html>
