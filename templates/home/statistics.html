@@ -51,7 +51,7 @@
 </style>
 <div class="row">
     <div class="sidebar">
-        <select onchange="updateChart()">
+        <select onchange="updateChart(this)">
             <option value="Income">Income</option>
             <option value="Outcome">Outcome</option>
             <option value="Investment">Investment</option>
@@ -70,24 +70,20 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
 
-var values = [
-    {
-
-    }
-]
+typeKey = 'Income'
 
 window.onload = function () {
   // We render via Django template
   var data = [
     {% for item in transaction %}
-      {{ item.amount }},
+        {{ item.amount }},
     {% endfor %}
   ]
 
   // We render via Django template
   var labels = [
     {% for item in transaction %}
-      "{{ item.date }}",
+        "{{ item.date }}",
     {% endfor %}
   ]
 
@@ -117,6 +113,12 @@ window.onload = function () {
   var ctx = document.getElementById('chart').getContext('2d');
   window.myLine = new Chart(ctx, config);
 };
+
+function updateChart(option){
+  console.log(option.value);
+  typeKey = option.value;
+  myLine.update();
+}
 
 </script>
 

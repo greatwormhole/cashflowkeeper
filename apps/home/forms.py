@@ -9,7 +9,7 @@ for item in choices:
     choice_list.append(item)
 
 
-type_choices = [('income', 'income'), ('outcome', 'outcome'), ('investment', 'investment')]
+type_choices = [('Income', 'Income'), ('Outcome', 'Outcome'), ('Investment', 'Investment')]
 
 class TransactionsForm(ModelForm):
     class Meta:
