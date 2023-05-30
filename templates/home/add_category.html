@@ -8,7 +8,7 @@
         <h1>Добавьте категорию</h1>
         <form method="post">
             {% csrf_token %}
-            {{ form.as_p }}<br>
+            {{ form.category }}<br>
             <button class="btn btn-success" type="submit">Добавить категорию</button><br>
         </form>
         </div>

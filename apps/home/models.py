@@ -35,6 +35,7 @@ class Transactions(models.Model):
     comment = models.CharField('Комментарий', max_length=50)
     # profile = models.ForeignKey(Profile, on_delete=models.CASCADE)
     profile = models.ForeignKey(User, on_delete=models.CASCADE)
+    type = models.CharField(max_length=255, default='income')
 
     def __str__(self):
         return f"{self.date} {self.amount}"

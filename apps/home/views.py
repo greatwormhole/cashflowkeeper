@@ -3,7 +3,6 @@ from django.contrib.auth.decorators import login_required
 from .models import Transactions, Category
 from .forms import TransactionsForm, EditForm
 
-
 @login_required(login_url='login')
 def home_page(request):
     return render(request, 'home/index.html')
@@ -44,8 +43,9 @@ def add_category(request):
     }
     return render(request, 'home/add_category.html', data)
 
+
 def statistics(request):
-    transaction = Transactions.objects.all()
+    transaction = Transactions.objects.order_by('date')
     return render(request, 'home/statistics.html', {'transaction': transaction})
 
 def history(request):

@@ -9,10 +9,12 @@ for item in choices:
     choice_list.append(item)
 
 
+type_choices = [('income', 'income'), ('outcome', 'outcome'), ('investment', 'investment')]
+
 class TransactionsForm(ModelForm):
     class Meta:
         model = Transactions
-        fields = ['date', 'category', 'amount', 'comment', 'profile']
+        fields = ['date', 'category', 'amount', 'comment', 'profile', 'type']
 
         widgets = {
             "profile": Select(attrs={
@@ -34,29 +36,21 @@ class TransactionsForm(ModelForm):
             "comment": TextInput(attrs={
                 'class': 'form-control',
                 'placeholder': 'Комментарий'
+            }),
+            "type": Select(choices=type_choices, attrs={
+                'class': 'form-control',
+                'placeholder': 'Тип операции'
             })
         }
 
 class EditForm(ModelForm):
     class Meta:
-        model = Transactions
-        fields = ['date', 'category', 'amount', 'comment']
+        model = Category
+        fields = ['category']
 
         widgets = {
-            "date": DateTimeInput(attrs={
-                'class': 'form-control',
-                'placeholder': 'Дата расхода'
-            }),
             "category": TextInput(attrs={
                 'class': 'form-control',
-                'placeholder': 'Выбеите категорию'
+                'placeholder': 'Добавьте категорию'
             }),
-            "amount": NumberInput(attrs={
-                'class': 'form-control',
-                'placeholder': 'Сумма'
-            }),
-            "comment": TextInput(attrs={
-                'class': 'form-control',
-                'placeholder': 'Комментарий'
-            })
         }

@@ -6,10 +6,76 @@
 
     <h1>Статистика</h1>
 
- <canvas id="chart"></canvas>
 
-<script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js"></script>
+<style>
+    * {
+      margin: 0;
+      padding: 0;
+      font-family: sans-serif;
+    }
+    .chartMenu{
+      width: 100vw;
+      height: 40px;
+      background: #1A1A1A;
+      color: rgba(255, 26, 104, 1);
+    }
+    .chartMenu p {
+      padding: 10px;
+      font-size: 20px;
+    }
+    .chartCard {
+      height: calc(100vh - 40px);
+      background: rgba(255, 26, 104, 0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .chartBox {
+      width: 80%;
+      padding: 20px;
+      border-radius: 20px;
+      background: white;
+    }
+    .row {
+      display: flex;
+      height 100vh;
+    }
+    .sidebar {
+      flex: 25%;
+      background: #ccc;
+      padding: 20px;
+    }
+    .column {
+      flex: 75%;
+    }
+</style>
+<div class="row">
+    <div class="sidebar">
+        <select onchange="updateChart()">
+            <option value="Income">Income</option>
+            <option value="Outcome">Outcome</option>
+            <option value="Investment">Investment</option>
+        </select>
+    </div>
+    <div class="column">
+        <div class="chartCard">
+          <div class="chartBox">
+            <canvas id="chart"></canvas>
+          </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
+
+var values = [
+    {
+
+    }
+]
+
 window.onload = function () {
   // We render via Django template
   var data = [
@@ -34,8 +100,9 @@ window.onload = function () {
       labels: labels,
       datasets: [
         {
-          label: 'A random dataset',
-          backgroundColor: 'red',
+          label: 'Out inc parameter',
+          backgroundColor: 'rgba(31, 180, 171, 1)',
+          borderRadius: 50,
           borderColor: 'lightblue',
           data: data,
           fill: false
