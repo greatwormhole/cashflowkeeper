@@ -70,22 +70,36 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
 
-typeKey = 'Income'
+  let typeKey = "Income";
 
-window.onload = function () {
-  // We render via Django template
-  var data = [
-    {% for item in transaction %}
-        {{ item.amount }},
-    {% endfor %}
+  var data = [];
+
+  var labels = [];
+
+  var all_data = [
+  { data: [ {% for item in transaction %}
+                {{ item.amount }},
+          {% endfor %} ],
+    labels:  [{% for item in transaction %}
+                 "{{ item.date }}",
+             {% endfor %} ],
+    type: [ {% for item in transaction %}
+                  "{{ item.type }}",
+          {% endfor %} ]
+  }
   ]
 
-  // We render via Django template
-  var labels = [
-    {% for item in transaction %}
-        "{{ item.date }}",
-    {% endfor %}
-  ]
+let flag = 0;
+
+for (let i=0; i < all_data[0].type.length; i++){
+    if (all_data[0].type[i] == typeKey) {
+        data[i-flag] = all_data[0].data[i];
+        labels[i-flag] = all_data[0].labels[i];
+    } else {
+        flag++
+    }
+}
+
 
   console.log(data);
   console.log(labels);
@@ -96,12 +110,13 @@ window.onload = function () {
       labels: labels,
       datasets: [
         {
-          label: 'Out inc parameter',
+          label: 'Income',
           backgroundColor: 'rgba(31, 180, 171, 1)',
           borderRadius: 50,
           borderColor: 'lightblue',
           data: data,
-          fill: false
+          fill: false,
+          parse: typeKey
         }
       ]
     },
@@ -111,16 +126,35 @@ window.onload = function () {
   };
 
   var ctx = document.getElementById('chart').getContext('2d');
-  window.myLine = new Chart(ctx, config);
-};
+  myChart = new Chart(ctx, config);
 
-function updateChart(option){
-  console.log(option.value);
-  typeKey = option.value;
-  myLine.update();
-}
+
+
+
+
+  function updateChart(option){
+   console.log(option.value);
+   typeKey = option.value;
+   var labels = [];
+   var data = [];
+
+   let flag = 0;
+
+    for (let i=0; i < all_data[0].type.length; i++){
+        if (all_data[0].type[i] == typeKey) {
+            data[i-flag] = all_data[0].data[i];
+            labels[i-flag] = all_data[0].labels[i];
+        } else {
+            flag++
+        }
+    }
+
+   config.data.datasets[0].data = data;
+   config.data.labels = labels;
+   config.data.datasets[0].label = option.value;
+   myChart.update();
+   }
 
 </script>
-
 
 {% endblock %}
