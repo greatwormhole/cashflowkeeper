@@ -1,5 +1,5 @@
 from .models import Transactions, Category
-from django.forms import ModelForm, TextInput, DateTimeInput, Textarea, NumberInput, Select
+from django.forms import ModelForm, TextInput, DateInput, Textarea, NumberInput, Select
 
 choices = Category.objects.all().values_list('category', 'category')
 
@@ -21,7 +21,7 @@ class TransactionsForm(ModelForm):
                 'class': 'form-control',
                 'placeholder': 'Профиль'
             }),
-            "date": DateTimeInput(attrs={
+            "date": DateInput(attrs={
                 'class': 'form-control',
                 'placeholder': 'Дата расхода'
             }),

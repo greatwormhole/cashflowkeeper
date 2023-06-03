@@ -61,6 +61,10 @@
         <div class="chartCard">
           <div class="chartBox">
             <canvas id="chart"></canvas>
+              <form method="POST">
+              <input onchange="filterData()" type="date" id="startdate" value="{{ min_date }}">
+              <input onchange="filterData()" type="date" id="enddate" value="{{ max_date }}">
+              </form>
           </div>
         </div>
     </div>
@@ -72,15 +76,15 @@
 
   let typeKey = "Income";
 
-  var data = [];
+  var data_first_run = [];
 
-  var labels = [];
+  var labels_first_run = [];
 
   var all_data = [
-  { data: [ {% for item in transaction %}
-                {{ item.amount }},
+  { data_first_run: [ {% for item in transaction %}
+                {{ item.sum_of_amount }},
           {% endfor %} ],
-    labels:  [{% for item in transaction %}
+    labels_first_run:  [{% for item in transaction %}
                  "{{ item.date }}",
              {% endfor %} ],
     type: [ {% for item in transaction %}
@@ -89,32 +93,34 @@
   }
   ]
 
+
+
 let flag = 0;
 
 for (let i=0; i < all_data[0].type.length; i++){
     if (all_data[0].type[i] == typeKey) {
-        data[i-flag] = all_data[0].data[i];
-        labels[i-flag] = all_data[0].labels[i];
+        data_first_run[i-flag] = all_data[0].data_first_run[i];
+        labels_first_run[i-flag] = all_data[0].labels_first_run[i];
     } else {
         flag++
     }
 }
 
 
-  console.log(data);
-  console.log(labels);
+  console.log(data_first_run);
+  console.log(labels_first_run);
 
   var config = {
     type: 'bar',
     data: {
-      labels: labels,
+      labels: labels_first_run,
       datasets: [
         {
           label: 'Income',
           backgroundColor: 'rgba(31, 180, 171, 1)',
-          borderRadius: 50,
+          borderRadius: 30,
           borderColor: 'lightblue',
-          data: data,
+          data: data_first_run,
           fill: false,
           parse: typeKey
         }
@@ -142,8 +148,8 @@ for (let i=0; i < all_data[0].type.length; i++){
 
     for (let i=0; i < all_data[0].type.length; i++){
         if (all_data[0].type[i] == typeKey) {
-            data[i-flag] = all_data[0].data[i];
-            labels[i-flag] = all_data[0].labels[i];
+            data[i-flag] = all_data[0].data_first_run[i];
+            labels[i-flag] = all_data[0].labels_first_run[i];
         } else {
             flag++
         }
@@ -151,8 +157,50 @@ for (let i=0; i < all_data[0].type.length; i++){
 
    config.data.datasets[0].data = data;
    config.data.labels = labels;
+
+   data_first_run = data;
+   labels_first_run = labels;
+
    config.data.datasets[0].label = option.value;
+   filterData()
    myChart.update();
+   }
+
+   function filterData(){
+     var labels2 = [...labels_first_run];
+     console.log(labels2);
+     const startlabel = document.getElementById('startdate');
+     const endlabel = document.getElementById('enddate');
+
+     // get the index number in array
+     var indexstartlabel = labels2.indexOf(startlabel.value);
+     var indexendlabel = labels2.indexOf(endlabel.value);
+
+     console.log(indexstartlabel)
+     console.log(indexendlabel)
+
+
+     if (indexstartlabel == -1) {
+       indexstartlabel = 0;
+     }
+     if (indexendlabel == -1) {
+       indexendlabel = labels2.length - 1;
+     }
+
+     console.log(indexstartlabel)
+     console.log(indexendlabel)
+
+
+     //slice the array
+     const filterDate = labels2.slice(indexstartlabel, indexendlabel + 1);
+     config.data.labels = filterDate;
+
+     // datapoints
+     const data2 = [...data_first_run];
+     const filterDatapoints = data2.slice(indexstartlabel, indexendlabel + 1);
+     config.data.datasets[0].data = filterDatapoints;
+
+     myChart.update();
    }
 
 </script>

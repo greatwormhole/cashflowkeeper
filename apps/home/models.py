@@ -29,7 +29,7 @@ class Category(models.Model):
 
 class Transactions(models.Model):
 
-    date = models.DateTimeField('Дата транзакции')
+    date = models.DateField('Дата транзакции')
     category = models.CharField(max_length=255, default='other')
     amount = models.PositiveIntegerField('Сумма транзакции')
     comment = models.CharField('Комментарий', max_length=50)
