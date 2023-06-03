@@ -30,6 +30,12 @@
       align-items: center;
       justify-content: center;
     }
+    .doughnutBox {
+      width: 60%;
+      padding: 20px;
+      border-radius: 20px;
+      background: white;
+    }
     .chartBox {
       width: 80%;
       padding: 20px;
@@ -71,9 +77,23 @@
 </div>
 
 
+
+<div class="row">
+    <div class="sidebar">
+    </div>
+    <div class="column">
+        <div class="chartCard">
+          <div class="doughnutBox">
+            <canvas id="doughnut"></canvas>
+          </div>
+        </div>
+    </div>
+</div>
+
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
 
+  // bar chart first run
   let typeKey = "Income";
 
   var data_first_run = [];
@@ -93,8 +113,6 @@
   }
   ]
 
-
-
 let flag = 0;
 
 for (let i=0; i < all_data[0].type.length; i++){
@@ -106,9 +124,7 @@ for (let i=0; i < all_data[0].type.length; i++){
     }
 }
 
-
-  console.log(data_first_run);
-  console.log(labels_first_run);
+// barchart config
 
   var config = {
     type: 'bar',
@@ -131,15 +147,78 @@ for (let i=0; i < all_data[0].type.length; i++){
     }
   };
 
+// barchart creating
   var ctx = document.getElementById('chart').getContext('2d');
   myChart = new Chart(ctx, config);
 
 
 
+// doughnut chart
 
+var data_first_run_doughnut = [];
+var labels_first_run_doughnut = [];
+
+  var all_data_doughnut = [
+  { data_first_run_doughnut: [ {% for item in doughnut %}
+                {{ item.sum_of_amount }},
+          {% endfor %} ],
+    labels_first_run_doughnut:  [{% for item in doughnut %}
+                 "{{ item.category }}",
+             {% endfor %} ],
+    type_doughnut: [ {% for item in doughnut %}
+                  "{{ item.type }}",
+          {% endfor %} ]
+  }
+  ]
+
+  let flag_doughnut = 0;
+
+for (let i=0; i < all_data_doughnut[0].type_doughnut.length; i++){
+    if (all_data_doughnut[0].type_doughnut[i] == typeKey) {
+        data_first_run_doughnut[i-flag_doughnut] = all_data_doughnut[0].data_first_run_doughnut[i];
+        labels_first_run_doughnut[i-flag_doughnut] = all_data_doughnut[0].labels_first_run_doughnut[i];
+    } else {
+        flag_doughnut++
+    }
+}
+
+var data_doughnut = {
+  labels: labels_first_run_doughnut,
+  datasets: [
+    {
+      label: 'Income',
+      data: data_first_run_doughnut
+    }
+  ]
+};
+
+var config_doughnut = {
+  type: 'doughnut',
+  data: data_doughnut,
+  options: {
+    responsive: true,
+    plugins: {
+      legend: {
+        position: 'top',
+      },
+      title: {
+        display: true,
+        text: 'Current month'
+      }
+    }
+  },
+};
+
+
+  var ctx_doughnut = document.getElementById('doughnut');
+  var myChart_doughnut = new Chart(ctx_doughnut, config_doughnut);
+
+  filterData();
+
+// functions
 
   function updateChart(option){
-   console.log(option.value);
+  // barchart update
    typeKey = option.value;
    var labels = [];
    var data = [];
@@ -164,6 +243,32 @@ for (let i=0; i < all_data[0].type.length; i++){
    config.data.datasets[0].label = option.value;
    filterData()
    myChart.update();
+
+   // doughnut update
+   var labels_doughnut = [];
+   var data_doughnut = [];
+
+   let flag_doughnut = 0;
+
+for (let i=0; i < all_data_doughnut[0].type_doughnut.length; i++){
+    if (all_data_doughnut[0].type_doughnut[i] == typeKey) {
+        data_doughnut[i-flag_doughnut] = all_data_doughnut[0].data_first_run_doughnut[i];
+        labels_doughnut[i-flag_doughnut] = all_data_doughnut[0].labels_first_run_doughnut[i];
+    } else {
+        flag_doughnut++
+    }
+}
+
+   config_doughnut.data.datasets[0].data = data_doughnut;
+   config_doughnut.data.labels = labels_doughnut;
+
+   data_first_run_doughnut = data_doughnut;
+   labels_first_run_doughnut = labels_doughnut;
+
+   config_doughnut.data.datasets[0].label = option.value;
+
+   myChart_doughnut.update();
+
    }
 
    function filterData(){
@@ -176,20 +281,12 @@ for (let i=0; i < all_data[0].type.length; i++){
      var indexstartlabel = labels2.indexOf(startlabel.value);
      var indexendlabel = labels2.indexOf(endlabel.value);
 
-     console.log(indexstartlabel)
-     console.log(indexendlabel)
-
-
      if (indexstartlabel == -1) {
        indexstartlabel = 0;
      }
      if (indexendlabel == -1) {
        indexendlabel = labels2.length - 1;
      }
-
-     console.log(indexstartlabel)
-     console.log(indexendlabel)
-
 
      //slice the array
      const filterDate = labels2.slice(indexstartlabel, indexendlabel + 1);
