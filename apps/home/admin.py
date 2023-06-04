@@ -5,4 +5,4 @@ from .models import *
 
 admin.site.register(Transactions)
 admin.site.register(Category)
-# admin.site.register(Profile)
+admin.site.register(Profile)

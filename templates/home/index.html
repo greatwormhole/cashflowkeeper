@@ -5,5 +5,188 @@
 {% block content%}
 
     <h1>Домашняя страница</h1>
-    
+
+<style>
+    * {
+      margin: 0;
+      padding: 0;
+      font-family: sans-serif;
+    }
+    .chartMenu{
+      width: 100vw;
+      height: 40px;
+      background: #1A1A1A;
+      color: rgba(255, 26, 104, 1);
+    }
+    .chartMenu p {
+      padding: 10px;
+      font-size: 20px;
+    }
+    .chartCard {
+      height: calc(100vh - 40px);
+      background: rgba(255, 26, 104, 0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .doughnutBox {
+      width: 60%;
+      padding: 20px;
+      border-radius: 20px;
+      background: white;
+    }
+    .chartBox {
+      width: 80%;
+      padding: 20px;
+      border-radius: 20px;
+      background: white;
+    }
+    .row {
+      display: flex;
+      height 100vh;
+    }
+    .sidebar {
+      flex: 25%;
+      background: #ccc;
+      padding: 20px;
+    }
+    .column {
+      flex: 75%;
+    }
+</style>
+<div class="row">
+    <div class="sidebar">
+    </div>
+    <div class="column">
+        <div class="chartCard">
+          <div class="chartBox">
+            <canvas id="chart"></canvas>
+              <form method="POST">
+              <input onchange="filterData()" type="date" id="startdate" value="{{ min_date }}">
+              <input onchange="filterData()" type="date" id="enddate" value="{{ max_date }}">
+              </form>
+          </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+
+  // bar chart first run
+  var data_first_run_Income = [];
+  var data_first_run_Outcome = [];
+
+  var labels_first_run = [];
+
+  var all_data = [
+  { data_first_run: [ {% for item in transaction %}
+                {{ item.sum_of_amount }},
+          {% endfor %} ],
+    labels_first_run:  [{% for item in transaction %}
+                 "{{ item.date }}",
+             {% endfor %} ],
+    type: [ {% for item in transaction %}
+                  "{{ item.type }}",
+          {% endfor %} ]
+  }
+  ]
+
+let flag = 0;
+
+for (let i=0; i < all_data[0].type.length; i++){
+    if (all_data[0].type[i] == "Income") {
+        data_first_run_Income[i-flag] = all_data[0].data_first_run[i];
+        labels_first_run[i-flag] = all_data[0].labels_first_run[i];
+    } else {
+        flag++
+    }
+}
+
+let flag_1 = 0;
+
+for (let i=0; i < all_data[0].type.length; i++){
+    if (all_data[0].type[i] == "Outcome") {
+        data_first_run_Outcome[i-flag_1] = all_data[0].data_first_run[i];
+    } else {
+        flag_1++
+    }
+}
+
+
+// barchart config
+
+  var config = {
+    type: 'bar',
+    data: {
+      labels: labels_first_run,
+      datasets: [
+        {
+          label: 'Income',
+          backgroundColor: 'rgba(31, 180, 171, 1)',
+          borderRadius: 30,
+          borderColor: 'lightblue',
+          data: data_first_run_Income,
+          fill: false,
+        },
+        {
+          label: 'Outcome',
+          backgroundColor: 'rgba(217, 94, 94, 1)',
+          borderRadius: 30,
+          borderColor: 'lightblue',
+          data: data_first_run_Outcome,
+          fill: false,
+        }
+      ]
+    },
+    options: {
+      responsive: true
+    }
+  };
+
+// barchart creating
+  var ctx = document.getElementById('chart').getContext('2d');
+  myChart = new Chart(ctx, config);
+
+// first_run_date_settings
+filterData();
+
+// functions
+
+   function filterData(){
+     var labels2 = [...labels_first_run];
+     console.log(labels2);
+     const startlabel = document.getElementById('startdate');
+     const endlabel = document.getElementById('enddate');
+
+     // get the index number in array
+     var indexstartlabel = labels2.indexOf(startlabel.value);
+     var indexendlabel = labels2.indexOf(endlabel.value);
+
+     if (indexstartlabel == -1) {
+       indexstartlabel = 0;
+     }
+     if (indexendlabel == -1) {
+       indexendlabel = labels2.length - 1;
+     }
+
+     //slice the array
+     const filterDate = labels2.slice(indexstartlabel, indexendlabel + 1);
+     config.data.labels = filterDate;
+
+     // datapoints
+     const data_Income2 = [...data_first_run_Income];
+     const data_Outcome2 = [...data_first_run_Outcome];
+     const filterDatapoints_1 = data_Income2.slice(indexstartlabel, indexendlabel + 1);
+     const filterDatapoints_2 = data_Outcome2.slice(indexstartlabel, indexendlabel + 1);
+     config.data.datasets[0].data = filterDatapoints_1;
+     config.data.datasets[1].data = filterDatapoints_2;
+
+     myChart.update();
+   }
+
+</script>
+
+
 {% endblock %}
