@@ -4,6 +4,26 @@
 
 {% block content%}
 
-    <h1>Профиль</h1>
+    <h1>{{ title }}</h1>
+
+    <img class="img" scr="mape.jpg" width="размер картинки" height="размер картинки" alt="Фото профиля"><br>
+    <label>Name  {{ first_name }}</label><br>
+    <label>Surname {{ last_name }}</label><br>
+    <label>Country {{ country }}</label><br>
+
+<head>
+    <script async="" type="text/javascript" src="http://yandex.st/jquery/2.0.3/jquery.js"></script>
+</head>
+<body>
+    <form method ="post" action='' style="display:none;" id="new_form">
+            <label>{{ form.first_name }}</label>
+            <label>{{ form.last_name }}</label>
+            <label>{{ form.country }}</label>
+            <span>{{ error }}</span>
+            <button class="btn-success" type ="submit">Save</button>
+    </form>
+    <button onClick="$('#new_form').show();">Settings profile</button>
+    <button onClick="$('#new_form').hide();">Close settings </button>
+</body>
 
 {% endblock %}

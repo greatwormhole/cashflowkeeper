@@ -1,12 +1,13 @@
 from django.db import models
 from django.contrib.auth.models import User
 
+
 class Profile(models.Model):
     user = models.OneToOneField(User, null=True, on_delete=models.CASCADE)
     first_name = models.CharField(max_length=30)
     last_name = models.CharField(max_length=30)
+    country = models.CharField(max_length=30)
     email = models.EmailField()
-
 
     def __str__(self):
         return f"{self.first_name} {self.last_name}"
@@ -18,7 +19,6 @@ class Profile(models.Model):
 
 class Category(models.Model):
     category = models.CharField(max_length=50)
-    
 
     def __str__(self):
         return self.category
@@ -29,7 +29,6 @@ class Category(models.Model):
 
 
 class Transactions(models.Model):
-
     date = models.DateField('Дата транзакции')
     category = models.CharField(max_length=255, default='other')
     amount = models.PositiveIntegerField('Сумма транзакции')
@@ -44,10 +43,3 @@ class Transactions(models.Model):
     class Meta:
         verbose_name = "Транзакция"
         verbose_name_plural = "Транзакции"
-
-
-
-
-
-
-

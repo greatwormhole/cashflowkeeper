@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
-from .models import Transactions, Category
-from .forms import TransactionsForm, EditForm
+from .models import Transactions, Category, Profile
+from .forms import TransactionsForm, EditForm, ProfileForm
 from django.db.models import Sum, Q
 import pandas as pd
 import datetime
@@ -133,4 +133,35 @@ def history(request):
     return render(request, 'home/history.html')
 
 def profile(request):
-    return render(request, 'home/profile.html')
+    error=''
+    if request.method == 'POST':
+        form = ProfileForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('profile')
+        else:
+            error = 'error'
+    form = ProfileForm()
+
+    data = {
+        'form': form,
+        'error': error,
+    }
+    return render(request, 'home/profile.html', data)
+
+def create(request):
+    error=''
+    if request.method == 'POST':
+        form = ProfileForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('profile')
+        else:
+            error = 'error'
+    form = ProfileForm()
+
+    data = {
+        'form': form,
+        'error': error,
+    }
+    return render(request, 'home/profile.html', data)
