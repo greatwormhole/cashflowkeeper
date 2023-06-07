@@ -1,0 +1,30 @@
+@import url(../fonts/fonts.css);
+
+.header {
+    display: inline-flex;
+}
+
+.text {
+    margin: 0;
+    padding: 0;
+    font-family: Inter, Arial, sans-serif;
+    font-style: normal;
+}
+
+.greetings {
+    font-size: 30px;
+    font-weight: 400;
+    min-width: fit-content;
+    padding-right: 7px;
+}
+
+.greeting_name {
+    font-size: 30px;
+    font-weight: 700;
+}
+
+.annotation {
+    font-size: 20px;
+    color: #00000091;
+}
+

@@ -1,0 +1,120 @@
+@import url(../fonts/fonts.css);
+
+.nav {
+    position: fixed;
+    width: 15px;
+    height: 100vh;
+    background: #FFFFFF;
+    display: flex;
+    justify-content: center;
+    box-shadow: 0 1px .1em gray;
+    border-radius: 5px;
+    top: 0px;
+    left: 0px;
+    z-index: 10;
+}
+
+.nav:hover {
+    width: 75px;
+    height: 100vh;
+    background: #FFFFFF;
+}
+
+.nav_buttons {
+    padding-top: 20px;
+    display: none;
+}
+
+.nav:hover .nav_buttons {
+    display: flex;
+    flex-direction: column;
+}
+
+.icon {
+    width: 45px;
+    height: 45px;
+    background-color: #F5F5F5;
+    border-radius: 15px;
+    background-size: 70%;
+    background-position: center;    
+    background-repeat: no-repeat;
+    margin: 0 0 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.icon-button {
+    width: 45px;
+    height: 45px;
+    background-color: #F5F5F5;
+    border-radius: 15px;
+    background-size: 70%;
+    background-position: center;    
+    background-repeat: no-repeat;
+    margin: 0 0 20px;
+}
+
+.icon-button:hover:not(.user, .wallet) {
+    background-color: #D9D9D9;
+}
+
+.active:not(.wallet) {
+    background-color: #eaeaea;
+}
+
+.wallet {
+    margin: 0 0 20px;
+    background: #29c6ab;
+    background-image: url(../icons/wallet.png);
+    background-position: bottom 5px;
+    background-size: 80%;
+}
+
+.wallet:hover {
+    background-color: #31AF99;
+}
+
+.home {
+    background-image: url(../icons/home.png);
+}
+
+.plus {
+    background-image: url(../icons/plus.png);
+}
+
+.statistics {
+    background-image: url(../icons/statistics.png);
+}
+
+.history {
+    background-image: url(../icons/history.png);
+}
+
+.settings {
+    margin-top: auto;
+    margin-bottom: 20px;
+    background-image: url(../icons/settings.png);
+}
+
+.user {
+    margin-bottom: 20px;
+    border: 0;
+    background: url(../icons/free-icon-profile.png);
+}
+
+.user_name {
+    display: none;
+    padding: 5px;
+    border-radius: 5px;
+    position: relative;
+    left: 60px;
+    bottom: 5px;
+    background-color: white;
+    background-size: cover;
+    width: fit-content;
+    height: 30px;
+    text-align: center;
+    font-size: 16px;
+}
+
