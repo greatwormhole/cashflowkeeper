@@ -1,12 +1,12 @@
 from .models import Transactions, Category
 from django.forms import ModelForm, TextInput, DateInput, Textarea, NumberInput, Select, DateField
 
-choices = Category.objects.all().values_list('category', 'category')
+# choices = Category.objects.all().values_list('category', 'category')
 
-choice_list = []
+# choice_list = []
 
-for item in choices:
-    choice_list.append(item)
+# for item in choices:
+#     choice_list.append(item)
 
 
 type_choices = [('Income', 'Income'), ('Outcome', 'Outcome'), ('Investment', 'Investment')]
@@ -25,7 +25,7 @@ class TransactionsForm(ModelForm):
                 'class': 'form-control',
                 'placeholder': 'Дата расхода'
             }),
-            "category": Select(choices=choice_list, attrs={
+            "category": Select(choices='choice_list', attrs={
                 'class': 'form-control',
                 'placeholder': 'Выбеите категорию'
             }),
