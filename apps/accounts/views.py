@@ -1,53 +1,77 @@
-from django.contrib.auth.models import User 
-from django.contrib.auth.forms import (
-    AuthenticationForm, 
-    UserCreationForm,
-    PasswordResetForm
-    )
-from django.contrib.auth import authenticate, login, logout 
-from django.shortcuts import render, redirect
-from django.contrib import messages
+from rest_framework.views import APIView
+from rest_framework.permissions import AllowAny
+from rest_framework.response import Response
+from rest_framework import status
+from .serializers import *
+from .renderers import *
+from .forms import *
 
-def loginPage(request):
-    form = AuthenticationForm()
-    if request.method == 'POST':
-        username = request.POST.get('username')
-        password = request.POST.get('password')
 
-        try:
-            user = User.objects.get(username=username)
-        except:
-            messages.error(request, 'User does not exist')
+class RegistrationAPIView(APIView):
+    permission_classes = (AllowAny, )
+    serializer_class = RegistrationSerializer
+    renderer_classes = (UserJSONRenderer, UserTemplateHTMLRenderer)
 
-        user = authenticate(request, username=username, password=password)
+    template_name = 'accounts/register_form.html'
 
-        if user is not None:
-            login(request, user)
-            return redirect('home')
-        else:
-            messages.error(request, 'Username or password is invalid')
+    def post(self, request):
+        user = request.data.get('user', {})
 
-    content = {'form': form}
-    return render(request, 'accounts/login_form.html', content)
+        serializer = self.serializer_class(data=user)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
 
-def logoutPage(request):
-    logout(request)
-    return redirect('/')
+        response = Response(serializer.data, status=status.HTTP_201_CREATED)
 
-def registerPage(request):
-    form = UserCreationForm()
-    if request.method == 'POST':
-        form = UserCreationForm(request.POST)
-        if form.is_valid():
-            user = form.save()
-            login(request, user)
-            return redirect('home')
-        else:
-            messages.error(request, 'Произошла ошибка при регистрации')
-    content = {'form': form}
-    return render(request, 'accounts/register_form.html', content)
+        return response
+    
+    def get(self, request):
 
-def passrecPage(request):
-    form = PasswordResetForm()
-    content = {'form': form}
-    return render(request, 'accounts/passrec.html', content)
+        form = UserRegisterForm(request.data)
+        serializer = self.serializer_class(data=request.data)
+
+        data = {
+            'form': form
+        }
+
+        response = Response(data, status=status.HTTP_200_OK)
+
+        return response
+    
+class LoginAPIView(APIView):
+
+    permission_classes = (AllowAny, )
+    renderer_classes = (UserJSONRenderer, )
+    serializer_class = LoginSerializer
+
+    def post(self, request):
+        user = request.data.get('user', {})
+        serializer = self.serializer_class(data=user)
+        serializer.is_valid(raise_exception=True)
+
+        response = Response(serializer.data, status=status.HTTP_200_OK)
+
+        return response
+    
+    def get(self, request):
+        pass
+    
+
+class PasswordRecoveryView(APIView):
+    
+    permission_classes = [AllowAny, ]
+    renderer_classes = [UserJSONRenderer, ]
+    serializer_class = PasswordRecoverySerializer
+
+    def post(self, request):
+
+        user = request.data.get('user', {})
+        serializer = self.serializer_class(data=user)
+        serializer.is_valid(raise_exception=True)
+
+        response = Response(serializer.data, status=status.HTTP_200_OK)
+
+        return response
+
+    def get(self, request):
+        pass
