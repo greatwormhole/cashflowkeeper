@@ -55,6 +55,14 @@
       flex: 75%;
     }
 </style>
+<div>
+    <output name="type" id="Total"></output>
+</div>
+<div>
+    <output name="by_category" id="by_category"></output>
+</div>
+
+
 <div class="row">
     <div class="sidebar">
         <select onchange="updateChart(this)">
@@ -153,7 +161,7 @@ for (let i=0; i < all_data[0].type.length; i++){
 
 
 
-// doughnut chart
+// doughnut chart first_run
 
 var data_first_run_doughnut = [];
 var labels_first_run_doughnut = [];
@@ -215,9 +223,77 @@ var config_doughnut = {
 
   filterData();
 
+  // total metric first run
+  total_value = [{'sum_of_amount': [{% for item in total %}
+                     {{ item.sum_of_amount }},
+                  {% endfor %}]},
+                  {'type': [{% for item in total %}
+                     "{{ item.type }}",
+                  {% endfor %}]}
+                  ]
+   var total_value_choice;
+   for (let i = 0; i < total_value[0].sum_of_amount.length; i++){
+       if (total_value[1].type[i] == typeKey) {
+            total_value_choice = total_value[0].sum_of_amount[i]
+       }
+   }
+    percentage = [{'perc': [{% for item in all_type_perc %}
+                     "{{ item.perc }}",
+                  {% endfor %}]},
+                  {'type': [{% for item in all_type_perc %}
+                     "{{ item.type }}",
+                  {% endfor %}]}
+                  ]
+   var percentage_choice;
+   for (let i = 0; i < percentage[0].perc.length; i++){
+       if (percentage[1].type[i] == typeKey) {
+            percentage_choice = percentage[0].perc[i]
+       }
+   }
+
+   document.getElementById('Total').innerHTML = 'Total' + "<br\n>" + "$" + total_value_choice + "  " +
+    percentage_choice + "%";
+
+   // by_category first run
+   by_category = [{'sum_of_amount': [{% for item in by_category %}
+                     {{ item.sum_of_amount }},
+                  {% endfor %}]},
+                  {'type': [{% for item in by_category %}
+                     "{{ item.type }}",
+                  {% endfor %}]},
+                  {'category': [{% for item in by_category %}
+                      "{{ item.category }}",
+                  {% endfor %}]},
+                  {'count': [{% for item in by_category %}
+                      {{ item.count }},
+                  {% endfor %}]}
+                  ]
+
+   var by_category_filtered = [];
+   let flag_by_cat = 0;
+
+   for (let i = 0; i < by_category[0].sum_of_amount.length; i++){
+       if (by_category[1].type[i] == typeKey) {
+            by_category_filtered[i - flag_by_cat] = {'sum_of_amount': by_category[0].sum_of_amount[i],
+                                    'category': by_category[2].category[i],
+                                    'count': by_category[3].count[i]}
+       } else {
+       flag_by_cat++
+       }
+   }
+
+     var output_by_cat = '';
+      for (let i = 0; i < by_category_filtered.length; i++){
+         output_by_cat += by_category_filtered[i].category + "<br>\n" +
+      by_category_filtered[i].count + " operation/s" + "     $" + by_category_filtered[i].sum_of_amount + "<br>\n";
+      }
+document.getElementById('by_category').innerHTML = output_by_cat;
+
+
 // functions
 
   function updateChart(option){
+
   // barchart update
    typeKey = option.value;
    var labels = [];
@@ -269,11 +345,78 @@ for (let i=0; i < all_data_doughnut[0].type_doughnut.length; i++){
 
    myChart_doughnut.update();
 
+   // total metric update
+   total_value = [{'sum_of_amount': [{% for item in total %}
+                     {{ item.sum_of_amount }},
+                  {% endfor %}]},
+                  {'type': [{% for item in total %}
+                     "{{ item.type }}",
+                  {% endfor %}]}
+                  ]
+   var total_value_choice;
+   for (let i = 0; i < total_value[0].sum_of_amount.length; i++){
+       if (total_value[1].type[i] == typeKey) {
+            total_value_choice = total_value[0].sum_of_amount[i]
+       }
+   }
+
+    percentage = [{'perc': [{% for item in all_type_perc %}
+                     "{{ item.perc }}",
+                  {% endfor %}]},
+                  {'type': [{% for item in all_type_perc %}
+                     "{{ item.type }}",
+                  {% endfor %}]}
+                  ]
+   var percentage_choice;
+   for (let i = 0; i < percentage[0].perc.length; i++){
+       if (percentage[1].type[i] == typeKey) {
+            percentage_choice = percentage[0].perc[i]
+       }
+   }
+
+   document.getElementById('Total').innerHTML = 'Total' + "<br\n>" + "$" + total_value_choice + "  " +
+    percentage_choice + "%";
+
+   // by category update
+   by_category = [{'sum_of_amount': [{% for item in by_category %}
+                     {{ item.sum_of_amount }},
+                  {% endfor %}]},
+                  {'type': [{% for item in by_category %}
+                     "{{ item.type }}",
+                  {% endfor %}]},
+                  {'category': [{% for item in by_category %}
+                      "{{ item.category }}",
+                  {% endfor %}]},
+                  {'count': [{% for item in by_category %}
+                      {{ item.count }},
+                  {% endfor %}]}
+                  ]
+
+   var by_category_filtered = [];
+   let flag_by_cat = 0;
+
+   for (let i = 0; i < by_category[0].sum_of_amount.length; i++){
+       if (by_category[1].type[i] == typeKey) {
+            by_category_filtered[i - flag_by_cat] = {'sum_of_amount': by_category[0].sum_of_amount[i],
+                                    'category': by_category[2].category[i],
+                                    'count': by_category[3].count[i]}
+       } else {
+       flag_by_cat++
+       }
+   }
+
+     var output_by_cat = '';
+      for (let i = 0; i < by_category_filtered.length; i++){
+         output_by_cat += by_category_filtered[i].category + "<br>\n" +
+      by_category_filtered[i].count + " operation/s" + "     $" + by_category_filtered[i].sum_of_amount + "<br>\n";
+      }
+     document.getElementById('by_category').innerHTML = output_by_cat;
+
    }
 
    function filterData(){
      var labels2 = [...labels_first_run];
-     console.log(labels2);
+
      const startlabel = document.getElementById('startdate');
      const endlabel = document.getElementById('enddate');
 
@@ -298,6 +441,7 @@ for (let i=0; i < all_data_doughnut[0].type_doughnut.length; i++){
      config.data.datasets[0].data = filterDatapoints;
 
      myChart.update();
+
    }
 
 </script>

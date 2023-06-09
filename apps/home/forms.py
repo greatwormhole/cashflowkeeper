@@ -1,5 +1,5 @@
-from .models import Transactions, Category, Profile
-from django.forms import ModelForm, TextInput, DateInput, Textarea, NumberInput, Select
+from .models import Transactions, Category
+from django.forms import ModelForm, TextInput, DateInput, Textarea, NumberInput, Select, DateField
 
 choices = Category.objects.all().values_list('category', 'category')
 
@@ -55,22 +55,3 @@ class EditForm(ModelForm):
             }),
         }
 
-class ProfileForm(ModelForm):
-    class Meta:
-        model = Profile
-        fields = ['first_name', 'last_name', 'country']
-
-        widgets = {
-            "first_name": TextInput(attrs={
-                'class': 'form-control',
-                'placeholder': 'name'
-            }),
-            "last_name": TextInput(attrs={
-                'class': 'form-control',
-                'placeholder': 'surname'
-            }),
-            "country": TextInput(attrs={
-                'class': 'form-control',
-                'placeholder': 'country'
-            }),
-        }
