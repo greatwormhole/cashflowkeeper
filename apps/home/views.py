@@ -8,7 +8,6 @@ import datetime
 from datetime import datetime
 import json
 
-@login_required(login_url='login')
 def home_page(request):
     # получение текущего года и месяца
     curr_year = str(datetime.now().year)
