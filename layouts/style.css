@@ -135,6 +135,68 @@ body {
     font-size: 16px;
 }
 
+/* main page */
+
+.main_page_body {
+    background-color: #CBE4E4;
+}
+
+.main_page_header {
+    padding:  30px 50px;
+    border-color: black;
+    box-shadow: 2px .1em gray;
+    height: 90px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 20px;
+}
+
+.wallet_icon_main_page {
+    width: 45px;
+    height: 45px;
+    border-radius: 15px;
+    background: #25c7bc;
+    background-image: url(./icons/wallet.png);
+    background-position: bottom 5px;
+    background-size: 80%;
+}
+
+.user_icon_main_page {
+    position: absolute;
+    right: 100px;
+    width: 45px;
+    height: 45px;
+    border-radius: 100%;
+    border: 0;
+    background: url(./icons/user-icon.png);
+    background-size: cover;
+    box-shadow: 1px 1px .1em gray;
+}
+
+.leng_button {
+    position: absolute;
+    width: 32px;
+    height: 32px;
+    right: 40px;
+    background-color: #CBE4E4;
+    background-image: url(./icons/lengicon.png);
+    background-position: 4px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    border: 1px solid #9b9b9b;
+    border-radius: 10px;
+}
+
+.action_get_app {
+    position: absolute;
+    background-color: #000;
+    color: white;
+    box-shadow: 0 2px .1em gray;
+    right: 190px;
+}
+
+
 /* header */
 
 .header, .content{
@@ -179,7 +241,6 @@ body {
     display: grid;
     grid-template-columns: repeat(6, auto);
     grid-template-rows: repeat(3, auto);
-
 }
 
 .widget {
@@ -188,12 +249,23 @@ body {
     border-radius: 15px;
     margin: 15px 25px 30px 0;
     min-width: 195px;
-    min-height: 150px; 
     padding: 20px 15px 15px;
 }
 
-.incomes, .outcomes, .investments, .total-analysis, .period, .add_income, .add_outcome, .add_investment {
+.pie_chart_widget{
+    position: relative;
+    margin: 15px 25px 30px 0;
+    padding: 20px 15px 15px;
+}
+
+.incomes, .outcomes, .investments, .chart_period, .change_chart{
     grid-column: span 2;
+    grid-row: span 1;
+}
+
+.total-analysis,  .add_income, .add_outcome, .add_investment  {
+    grid-column: span 2;
+    grid-row: span 4;
 }
 
 .histogram, .manage, .last_added, .full_history {
@@ -202,9 +274,20 @@ body {
     max-width: 1150px;
 }
 
-.change_settings, .bar-chart, .pie-chart {
-    grid-column: span 3;
+.change_settings, .bar_chart, .pie_chart_widget {
+    grid-column: span 4;
 }
+
+.chart_period, .change_chart {
+    height: 150px;
+}
+
+
+
+
+
+
+/* home page */
 
 .illustration {
     display: inline-block;
@@ -251,14 +334,18 @@ body {
     height: fit-content;
     min-width: 500px;
 } 
-/* 
-.operations_history {
-    height: fit-content;            template
-} */
 
 .header_row {  
+    list-style-type:none;
+    display: grid;
+    height: 40px;
+    grid-template-columns: minmax(50px, 15%) minmax(92px, 30%) minmax(80px, 20%) minmax(80px, 30%) minmax(80px, 5%);  
+    grid-gap: 5px;
+    padding: 10px 5px 10px 20px ;
+
     background: rgba(200, 200, 200, 0.37);    
     border-radius: 15px;
+    margin-bottom: 10px;
 }
 
 .history_row {
@@ -266,8 +353,12 @@ body {
     display: grid;
     grid-template-columns: minmax(50px, 15%) minmax(92px, 30%) minmax(80px, 20%) minmax(80px, 30%) minmax(80px, 5%);  
     grid-gap: 5px;
-    padding: 10px 5px 10px 20px ;    
-    margin-top: 10px;
+    padding: 10px 5px 10px 20px ;
+    margin-bottom: 0;    
+}
+
+.history_block {
+    margin-top: 20px;
 }
 
 .history_col {
@@ -295,11 +386,63 @@ body {
     background-color: #ec4a68;
 }
 
+/* analysis */
 
+.change_period_block {
+    margin: 23px 0 15px;
+}
 
+.date_input {
+    margin-top: -5px;
+    position: absolute;
+    margin-left: 30%;
+    width: 60%;
+}
 
+.total-numbers {
+    margin: 20px 0 30px;
+}
 
+.total_percent_number {
+    color: #1db171;
+}
 
+.analisys_icon {
+    width: 45px;
+    height: 45px;
+    border-radius: 15px;
+    background-size: 70%;
+    background-position: center;    
+    background-repeat: no-repeat;
+    margin: 0 10px 0 0;
+    background-color: rgba(80, 174, 7, 0.25);;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.category {
+    display: flex;
+    justify-content: left;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.total_analysis_block {
+    margin-right: 10px;
+    margin-bottom: 20px;
+}
+
+.analysis_number {
+    margin-left: auto;
+    margin-right: 10px;
+}
+
+.analysis_text {
+    font-size: 16px;
+    font-weight: 500;
+    width: fit-content;
+}
 
 
 

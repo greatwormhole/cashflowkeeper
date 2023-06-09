@@ -134,6 +134,29 @@ example_history_activity.forEach(item => {
 
 
 
+// if (title.textContent == 'Statistics') {
+// const total_percent_number = document.querySelector('.total_percent_number') 
+// console.log(total_percent_number.textContent)
+// const str=total_percent_number.textContent
+// console.log(str)
+// console.log(str[0])
+
+// if (total_percent_number.textContent != null ){
+//   console.log(total_percent_number.textContent[0])
+
+// if (total_percent_number.textContent[0]=='+') {
+//   module.style.color = '#1db171'
+// }
+// // else if (total_percent_number[0]=='-') {
+// //   module.style.color = 'red'
+// // }
+// // else {
+// //   module.style.color = '#212529'
+// }
+// } 
+
+
+
 if (title.textContent == 'Home Page') {
 const incomes_number = document.querySelector('.incomes-number')
 const outcomes_number = document.querySelector('.outcomes-number')
@@ -165,18 +188,21 @@ showPercents(investments_percent_number,  numbers_examples.investments.percents)
 }
 
 
-if (title.textContent == 'Profile And Settings') {
-  const info_user_name = document.querySelector('.info_user_name')
-  info_user_name.textContent = example_name
-  const info_user_surname = document.querySelector('.info_user_surname')
-  info_user_surname.textContent = example_surname
-  const info_user_country = document.querySelector('.info_user_country')
-  info_user_country.textContent = example_country
-  const info_user_mail = document.querySelector('.info_user_mail')
-  info_user_mail.textContent = example_mail
+// if (title.textContent == 'Profile And Settings') {
+//   const info_user_name = document.querySelector('.info_user_name')
+//   info_user_name.textContent = example_name
+//   const info_user_surname = document.querySelector('.info_user_surname')
+//   info_user_surname.textContent = example_surname
+//   const info_user_country = document.querySelector('.info_user_country')
+//   info_user_country.textContent = example_country
+//   const info_user_mail = document.querySelector('.info_user_mail')
+//   info_user_mail.textContent = example_mail
+// }
 
 
-}
+
+
+
 
 
 // if (title.textContent == 'History') {
@@ -318,5 +344,3 @@ if (title.textContent == 'Profile And Settings') {
 
 //      myChart.update();
 //    }
-
-
