@@ -1,5 +1,5 @@
 from .models import Transactions, Category
-from django.forms import ModelForm, TextInput, DateInput, Textarea, NumberInput, Select
+from django.forms import ModelForm, TextInput, DateInput, Textarea, NumberInput, Select, DateField
 
 choices = Category.objects.all().values_list('category', 'category')
 
@@ -54,3 +54,5 @@ class EditForm(ModelForm):
                 'placeholder': 'Добавьте категорию'
             }),
         }
+
+
