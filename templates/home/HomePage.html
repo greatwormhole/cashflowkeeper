@@ -1,0 +1,334 @@
+{% load static %}
+<!doctype html>
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Home Page</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
+  <script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe" crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="{% static "normalize.css" %}">
+  <link rel="stylesheet" href="{% static "style.css" %}">
+</head>
+<body>
+  <div class="nav">
+    <div class="nav_buttons">
+        <a class="icon-button wallet" href="{% url 'main' %}" title="CashFlowKeeperMainPage"></a>
+        <a class="icon-button active home" href="{% url 'home' %}" title="HomePage"></a>
+        <a class="icon-button plus" href="{% url 'add' %}" title="Add"></a>
+        <a class="icon-button statistics" href="{% url 'statistics' %}" title="Statistics"></a>
+        <a class="icon-button history" href="{% url 'history' %}" title="History"></a>
+        <a class="icon-button settings" href="{% url 'profile' %}" title="ProfileAndSettings"></a>
+        <button class="icon user"><h3 class="user_name"></h3></button>
+    </div>
+</div>
+<header class="header">
+  <div class="container">
+      <div class="row">
+          <h2 class="col text greetings">
+              Get started,
+          </h2>
+          <h2 class="col text greeting_name">
+          </h2>
+      </div>
+      <div class="row">
+          <div class="col">
+              <h5 class="text annotation">Here's your report overview</h5>
+          </div>
+      </div>
+</header>
+<section class="content">
+  <div class="widget incomes">
+    <h4 class="text info-text">Total Incomes</h4>
+    <img class="illustration" src="{% static "icons/statistic-grow.png" %}">
+      <h4>{{ total_incomes }}</h4>
+      <h5>{{ incomes_perc }} % </h5>
+    <!--   <p class="changing-numbers"><span class="text title-text incomes-number"> </span><span class="text percent-number incomes-percent-number"> </span></p>   -->
+  </div>
+  <div class="widget outcomes">
+    <h4 class="text info-text">Total Outcomes</h4>
+    <img class="illustration" src="{% static "icons/statistic-low.png" %}">
+      <h4>{{ total_outcomes }}</h4>
+      <h5>{{ outcomes_perc }} % </h5>
+     <!--<p<p class="changing-numbers"><span class="text title-text outcomes-number"></span><span class="text percent-number outcomes-percent-number"> </span></p>   -->
+  </div>
+    <div class="widget investments">
+      <h4 class="text info-text">Investments</h4>
+      <img class="illustration" src="{% static "icons/investments.png" %}">
+        <h4>{{ total_investments }}</h4>
+        <h5>{{ investments_perc }} % </h5>
+      <!--<p class="changing-numbers"><span class="text title-text investments-number"> </span><span class="text percent-number investments-percent-number"> </span></p>   -->
+  </div>
+  <div class="widget histogram">
+    <h4 class="text info-text">Payment Analytics</h4>
+
+      {% block content%}
+
+
+<div>
+<!--    total_incomes: {{ total_incomes }} {{ incomes_perc }}%<br>-->
+<!--    total_outcomes: {{ total_outcomes }} {{ outcomes_perc }}%<br>-->
+<!--    total_investments: {{ total_investments }} {{ investments_perc }}%<br>-->
+    all_time_investments: {{ all_time_investments }}
+</div>
+
+<style>
+    * {
+      margin: 0;
+      padding: 0;
+      font-family: sans-serif;
+    }
+    .chartMenu{
+      width: 100vw;
+      height: 40px;
+      background: #1A1A1A;
+      color: rgba(255, 26, 104, 1);
+    }
+    .chartMenu p {
+      padding: 10px;
+      font-size: 20px;
+    }
+
+
+    .chartBox {
+      width: 100%;
+      padding: 20px;
+      border-radius: 20px;
+      background: white;
+    }
+    .row {
+      display: flex;
+      height 100vh;
+    }
+    .column {
+      flex: 100%;
+    }
+</style>
+<div class="row">
+    <div class="sidebar">
+    </div>
+    <div class="column">
+        <div class="chartCard">
+          <div class="chartBox">
+            <canvas id="chart"></canvas>
+              <form method="POST">
+              <input onchange="filterData()" type="date" id="startdate" value="{{ min_date }}">
+              <input onchange="filterData()" type="date" id="enddate" value="{{ max_date }}">
+              </form>
+          </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+
+  // bar chart first run
+  var data_first_run_Income = [];
+  var data_first_run_Outcome = [];
+
+  var labels_first_run = [];
+
+  var all_data = [
+  { data_first_run: [ {% for item in transaction %}
+                {{ item.sum_of_amount }},
+          {% endfor %} ],
+    labels_first_run:  [{% for item in transaction %}
+                 "{{ item.date }}",
+             {% endfor %} ],
+    type: [ {% for item in transaction %}
+                  "{{ item.type }}",
+          {% endfor %} ]
+  }
+  ]
+
+let flag = 0;
+
+for (let i=0; i < all_data[0].type.length; i++){
+    if (all_data[0].type[i] == "Income") {
+        data_first_run_Income[i-flag] = all_data[0].data_first_run[i];
+        labels_first_run[i-flag] = all_data[0].labels_first_run[i];
+    } else {
+        flag++
+    }
+}
+
+let flag_1 = 0;
+
+for (let i=0; i < all_data[0].type.length; i++){
+    if (all_data[0].type[i] == "Outcome") {
+        data_first_run_Outcome[i-flag_1] = all_data[0].data_first_run[i];
+    } else {
+        flag_1++
+    }
+}
+
+
+// barchart config
+
+  var config = {
+    type: 'bar',
+    data: {
+      labels: labels_first_run,
+      datasets: [
+        {
+          label: 'Income',
+          backgroundColor: 'rgba(31, 180, 171, 1)',
+          borderRadius: 30,
+          borderColor: 'lightblue',
+          data: data_first_run_Income,
+          fill: false,
+        },
+        {
+          label: 'Outcome',
+          backgroundColor: 'rgba(217, 94, 94, 1)',
+          borderRadius: 30,
+          borderColor: 'lightblue',
+          data: data_first_run_Outcome,
+          fill: false,
+        }
+      ]
+    },
+    options: {
+      responsive: true
+    }
+  };
+
+// barchart creating
+  var ctx = document.getElementById('chart').getContext('2d');
+  myChart = new Chart(ctx, config);
+
+// first_run_date_settings
+filterData();
+
+// functions
+
+   function filterData(){
+     var labels2 = [...labels_first_run];
+     console.log(labels2);
+     const startlabel = document.getElementById('startdate');
+     const endlabel = document.getElementById('enddate');
+
+     // get the index number in array
+     var indexstartlabel = labels2.indexOf(startlabel.value);
+     var indexendlabel = labels2.indexOf(endlabel.value);
+
+     if (indexstartlabel == -1) {
+       indexstartlabel = 0;
+     }
+     if (indexendlabel == -1) {
+       indexendlabel = labels2.length - 1;
+     }
+
+     //slice the array
+     const filterDate = labels2.slice(indexstartlabel, indexendlabel + 1);
+     config.data.labels = filterDate;
+
+     // datapoints
+     const data_Income2 = [...data_first_run_Income];
+     const data_Outcome2 = [...data_first_run_Outcome];
+     const filterDatapoints_1 = data_Income2.slice(indexstartlabel, indexendlabel + 1);
+     const filterDatapoints_2 = data_Outcome2.slice(indexstartlabel, indexendlabel + 1);
+     config.data.datasets[0].data = filterDatapoints_1;
+     config.data.datasets[1].data = filterDatapoints_2;
+
+     myChart.update();
+   }
+
+</script>
+
+
+{% endblock %}
+
+    <div class="change_display">
+      <form action="#">
+      <select name="Time axis" class="little_tag_select change_time_axis">
+        <option value="By days" class="text adding-info-annotation">By days</option>
+        <option value="By month" class="text adding-info-annotation">By month</option>
+      </select>
+      <input type="hidden" value="" />
+    </form>
+    <form action="#">
+      <select name="Time period" class="little_tag_select change_time_period">
+        <option value="This week" class="text adding-info-annotation">This week</option>
+        <option value="Last month" class="text adding-info-annotation">Last month</option>
+        <option value="Last 3 month" class="text adding-info-annotation">Last 3 months</option>
+        <option value="All" class="text adding-info-annotation">All</option>
+      </select>
+      <input type="hidden" value="" />
+    </form>
+  </div>
+  </div>
+  <div class="widget manage">
+    <h4 class="text info-text">Manage Invoice</h4>  
+    <div class="change_display">
+    <form action="#">
+      <select name="Time period" class="little_tag_select change_time_period">
+        <option value="This week" class="text adding-info-annotation">This week</option>
+        <option value="Last month" class="text adding-info-annotation">Last month</option>
+        <option value="Last 3 month" class="text adding-info-annotation">Last 3 months</option>
+        <option value="All" class="text adding-info-annotation">All</option>
+      </select>
+      <input type="hidden" value="" />
+    </form>
+  </div>
+  <div class="history_block">
+    <ol class="history_row header_row">
+    <li class="text input_text history_col date_col">date</li>
+    <li class="text input_text history_col category_col">category</li>
+    <li class="text input_text history_col amount_col">amount</li>
+    <li class="text input_text history_col comment_col">comment</li>
+    <li class="delete_col"></li>
+</ol>
+<ol class="history_row"> 
+    <li class="text adding-info-annotation history_col date_col">08 Jan 2023</li>
+    <li class="text adding-info-annotation history_col category_col">Children's products</li>
+    <li class="text adding-info-annotation history_col amount_col">-$1,79</li>
+    <li class="text adding-info-annotation history_col comment_col">Running trainers</li>
+    <li class="delete_col"><button class="button_action action_delete_row"><h4 class="text button-text">Delete</h4></button></li>
+</ol>
+<ol class="operations_history history_row"> <!--template-->
+    <li class="text adding-info-annotation history_col date_col">08 Jan 2023</li>
+    <li class="text adding-info-annotation history_col category_col">Children's products</li>
+    <li class="text adding-info-annotation history_col amount_col">-$1,79</li>
+    <li class="text adding-info-annotation history_col comment_col">Running trainers</li>
+    <li class="delete_col"><button class="button_action action_delete_row"><h4 class="text button-text">Delete</h4></button></li>
+</ol>
+</div>
+</div>
+</section>
+ <button class="expense_button"></button>
+  <div class="expense_nav">
+    <div class="expense_nav_info">
+        <h3 class="text title-text"> Extense account </h3>
+        <div class="card">
+        </div>
+            <div class="recent-activity-title">
+                <h4 class="text info-text">
+                    Recent Activity
+                </h4>
+                <a href="history" class="text anchor-text right-placed">See all</a>
+            </div>
+            <div class="recent-activity">
+              <div class="recent-block">
+                <template class="recent-block-template">
+                  <div class="flex_container">
+                    <div class="icon">
+                      <img src="" alt="" class="image">
+                      </div>
+                      <div class="adding-info">
+                      <h4 class="text info-text"></h4>
+                      <h5 class="text adding-info-annotation"></h5>
+                    </div>
+                  <div class="text right-placed annotation number">
+              </div>
+            </div>
+          </template>
+        </div>
+      </div>
+    </div>
+  </div>
+    <script src="{% static "script.js" %}"></script>
+  </body>
+</html>

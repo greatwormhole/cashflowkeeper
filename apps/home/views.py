@@ -22,21 +22,21 @@ def home_page(request):
         previous_year = str(datetime.now().year - 1)
 
     if Transactions.objects.all().filter(date__year=curr_year, date__month=curr_month,
-                                                    type='Income').count() != 0:
+                                         type='Income').count() != 0:
         total_incomes = Transactions.objects.filter(date__year=curr_year, date__month=curr_month,
                                                     type='Income').aggregate(Sum("amount"))['amount__sum']
     else:
         total_incomes = 0
 
     if Transactions.objects.all().filter(date__year=curr_year, date__month=curr_month,
-                                                     type='Outcome').count() != 0:
+                                         type='Outcome').count() != 0:
         total_outcomes = Transactions.objects.filter(date__year=curr_year, date__month=curr_month,
                                                      type='Outcome').aggregate(Sum("amount"))['amount__sum']
     else:
         total_outcomes = 0
 
     if Transactions.objects.all().filter(date__year=curr_year, date__month=curr_month,
-                                                        type='Investment').count() != 0:
+                                         type='Investment').count() != 0:
         total_investments = Transactions.objects.filter(date__year=curr_year, date__month=curr_month,
                                                         type='Investment').aggregate(Sum("amount"))['amount__sum']
     else:
@@ -50,30 +50,28 @@ def home_page(request):
 
     # динамика к предыдущему месяцу
     if Transactions.objects.all().filter(date__year=previous_year, date__month=previous_month,
-                                                         type='Income').count() != 0:
+                                         type='Income').count() != 0:
         total_incomes_prev = Transactions.objects.filter(date__year=previous_year, date__month=previous_month,
                                                          type='Income').aggregate(Sum("amount"))['amount__sum']
+        incomes_perc = round((total_incomes - total_incomes_prev) * 100 / total_incomes_prev, 1)
     else:
-        total_incomes_prev = 1
-
-    incomes_perc = round((total_incomes - total_incomes_prev) * 100 / total_incomes_prev, 1)
+        incomes_perc = 0
 
     if Transactions.objects.filter(date__year=previous_year, date__month=previous_month,
-                                                          type='Outcome').all().count() != 0:
+                                   type='Outcome').all().count() != 0:
         total_outcomes_prev = Transactions.objects.filter(date__year=previous_year, date__month=previous_month,
                                                           type='Outcome').aggregate(Sum("amount"))['amount__sum']
+        outcomes_perc = round((total_outcomes - total_outcomes_prev) * 100 / total_outcomes_prev, 1)
     else:
-        total_outcomes_prev = 1
-
-    outcomes_perc = round((total_outcomes - total_outcomes_prev) * 100 / total_outcomes_prev, 1)
+        outcomes_perc = 0
 
     if Transactions.objects.filter(date__year=previous_year, date__month=previous_month,
-                                                         type='Investment').all().count() != 0:
+                                   type='Investment').all().count() != 0:
         total_investments_prev = Transactions.objects.filter(date__year=previous_year, date__month=previous_month,
-                                                         type='Investment').aggregate(Sum("amount"))['amount__sum']
+                                                             type='Investment').aggregate(Sum("amount"))['amount__sum']
+        investments_perc = round((total_investments - total_investments_prev) * 100 / total_investments_prev, 1)
     else:
-        total_investments_prev=1
-    investments_perc = round((total_investments - total_investments_prev) * 100 / total_investments_prev, 1)
+        investments_perc = 0
 
     # bar chart
     # работа с датами
@@ -81,10 +79,12 @@ def home_page(request):
     if dates_list.all().count() != 0:
         min_date = dates_list.order_by('date').first()[0]
         max_date = dates_list.order_by('date').last()[0]
-        min_date_str = dates_list.filter(date__year=curr_year, date__month=curr_month).order_by('date').first()[0].strftime(
-        "%Y-%m-%d")
-        max_date_str: object = dates_list.filter(date__year=curr_year, date__month=curr_month).order_by('date').last()[0].strftime(
-        "%Y-%m-%d")
+        min_date_str = dates_list.filter(date__year=curr_year, date__month=curr_month).order_by('date').first()[
+            0].strftime(
+            "%Y-%m-%d")
+        max_date_str: object = dates_list.filter(date__year=curr_year, date__month=curr_month).order_by('date').last()[
+            0].strftime(
+            "%Y-%m-%d")
     else:
         min_date = '2023-01-01'
         max_date = '2023-01-01'
@@ -115,16 +115,16 @@ def home_page(request):
         sum_of_amount=('amount', 'sum')).sort_values(by='date')
     transaction_json = transaction_df.to_json(orient='records')
     transaction = json.loads(transaction_json)
-    return render(request, 'home/index.html', {'transaction': transaction,
-                                               'min_date': min_date_str,
-                                               'max_date': max_date_str,
-                                               'total_incomes': total_incomes,
-                                               'total_outcomes': total_outcomes,
-                                               'total_investments': total_investments,
-                                               'all_time_investments': all_time_investments,
-                                               'incomes_perc': incomes_perc,
-                                               'outcomes_perc': outcomes_perc,
-                                               'investments_perc': investments_perc})
+    return render(request, 'home/HomePage.html', {'transaction': transaction,
+                                                  'min_date': min_date_str,
+                                                  'max_date': max_date_str,
+                                                  'total_incomes': total_incomes,
+                                                  'total_outcomes': total_outcomes,
+                                                  'total_investments': total_investments,
+                                                  'all_time_investments': all_time_investments,
+                                                  'incomes_perc': incomes_perc,
+                                                  'outcomes_perc': outcomes_perc,
+                                                  'investments_perc': investments_perc})
 
 
 def add(request):
@@ -143,7 +143,7 @@ def add(request):
         'form': form,
         'error': error
     }
-    return render(request, 'home/add.html', data)
+    return render(request, 'home/Add.html', data)
 
 
 def add_category(request):
@@ -173,12 +173,21 @@ def statistics(request):
     # bar chart
     # работа с датами
     dates_list = Transactions.objects.values_list('date')
-    min_date = dates_list.order_by('date').first()[0]
-    max_date = dates_list.order_by('date').last()[0]
-    min_date_str = dates_list.filter(date__year=curr_year, date__month=curr_month).order_by('date').first()[0].strftime(
-        "%Y-%m-%d")
-    max_date_str = dates_list.filter(date__year=curr_year, date__month=curr_month).order_by('date').last()[0].strftime(
-        "%Y-%m-%d")
+
+    if dates_list.all().count() != 0:
+        min_date = dates_list.order_by('date').first()[0]
+        max_date = dates_list.order_by('date').last()[0]
+        min_date_str = dates_list.filter(date__year=curr_year, date__month=curr_month).order_by('date').first()[
+            0].strftime(
+            "%Y-%m-%d")
+        max_date_str: object = dates_list.filter(date__year=curr_year, date__month=curr_month).order_by('date').last()[
+            0].strftime(
+            "%Y-%m-%d")
+    else:
+        min_date = '2023-01-01'
+        max_date = '2023-01-01'
+        min_date_str = '2023-01-01'
+        max_date_str = '2023-01-31'
 
     # работа с транзакциями
     transaction = Transactions.objects.values('date', 'type').order_by().annotate(amount=Sum('amount')).order_by('date')
@@ -236,48 +245,54 @@ def statistics(request):
                                                     type='Investment').aggregate(Sum("amount"))['amount__sum']
 
     # динамика к предыдущему месяцу
-    total_incomes_prev = Transactions.objects.filter(date__year=previous_year, date__month=previous_month,
-                                                     type='Income').aggregate(Sum("amount"))['amount__sum']
-    incomes_perc = round((total_incomes - total_incomes_prev) * 100 / total_incomes_prev, 1)
+    if Transactions.objects.all().filter(date__year=previous_year, date__month=previous_month,
+                                         type='Income').count() != 0:
+        total_incomes_prev = Transactions.objects.filter(date__year=previous_year, date__month=previous_month,
+                                                         type='Income').aggregate(Sum("amount"))['amount__sum']
+        incomes_perc = round((total_incomes - total_incomes_prev) * 100 / total_incomes_prev, 1)
+    else:
+        incomes_perc = 0
 
-    total_outcomes_prev = Transactions.objects.filter(date__year=previous_year, date__month=previous_month,
-                                                      type='Outcome').aggregate(Sum("amount"))['amount__sum']
-    outcomes_perc = round((total_outcomes - total_outcomes_prev) * 100 / total_outcomes_prev, 1)
+    if Transactions.objects.filter(date__year=previous_year, date__month=previous_month,
+                                   type='Outcome').all().count() != 0:
+        total_outcomes_prev = Transactions.objects.filter(date__year=previous_year, date__month=previous_month,
+                                                          type='Outcome').aggregate(Sum("amount"))['amount__sum']
+        outcomes_perc = round((total_outcomes - total_outcomes_prev) * 100 / total_outcomes_prev, 1)
+    else:
+        outcomes_perc = 0
 
-    total_investments_prev = Transactions.objects.filter(date__year=previous_year, date__month=previous_month,
-                                                         type='Investment').aggregate(Sum("amount"))['amount__sum']
-    investments_perc = round((total_investments - total_investments_prev) * 100 / total_investments_prev, 1)
-
+    if Transactions.objects.filter(date__year=previous_year, date__month=previous_month,
+                                   type='Investment').all().count() != 0:
+        total_investments_prev = Transactions.objects.filter(date__year=previous_year, date__month=previous_month,
+                                                             type='Investment').aggregate(Sum("amount"))['amount__sum']
+        investments_perc = round((total_investments - total_investments_prev) * 100 / total_investments_prev, 1)
+    else:
+        investments_perc = 0
     all_type_perc = [{'type': 'Income', 'perc': str(incomes_perc)},
                      {'type': 'Outcome', 'perc': str(outcomes_perc)},
                      {'type': 'Investment', 'perc': str(investments_perc)}]
 
-    return render(request, 'home/statistics.html', {'transaction': transaction, 'min_date': min_date_str,
-                                                    'max_date': max_date_str, 'doughnut': doughnut,
-                                                    'by_category': by_category, 'total': total,
-                                                    'all_type_perc': all_type_perc})
+    return render(request, 'home/Statistics.html', {'transaction': transaction, 'min_date': min_date_str,
+                                                        'max_date': max_date_str, 'doughnut': doughnut,
+                                                        'by_category': by_category, 'total': total,
+                                                        'all_type_perc': all_type_perc})
 
 
 def history(request):
-    return render(request, 'home/history.html')
+    return render(request, 'home/History.html')
+
+
+def main(request):
+    return render(request, 'home/MainPage.html')
 
 
 def profile(request):
     error = ''
-    if request.method == 'POST':
-        form = ProfileForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect('profile')
-        else:
-            error = 'error'
-    form = ProfileForm()
-
     data = {
-        'form': form,
-        'error': error,
+        'data1': 1,
+        'data2': 2,
     }
-    return render(request, 'home/profile.html', data)
+    return render(request, 'home/ProfileAndSetting.html', data)
 
 
 def create(request):
