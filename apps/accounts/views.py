@@ -1,6 +1,9 @@
+from django.shortcuts import render
+from django.http import HttpRequest
 from rest_framework.views import APIView
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
+from rest_framework.request import Request
 from rest_framework import status
 from .serializers import *
 from .renderers import *
@@ -28,15 +31,12 @@ class RegistrationAPIView(APIView):
     def get(self, request):
 
         form = UserRegisterForm(request.data)
-        serializer = self.serializer_class(data=request.data)
 
         data = {
             'form': form
         }
 
-        response = Response(data, status=status.HTTP_200_OK)
-
-        return response
+        return render(request, 'accounts/register_form.html', data)
     
 class LoginAPIView(APIView):
 
@@ -45,16 +45,28 @@ class LoginAPIView(APIView):
     serializer_class = LoginSerializer
 
     def post(self, request):
+
         user = request.data.get('user', {})
         serializer = self.serializer_class(data=user)
-        serializer.is_valid(raise_exception=True)
+
+        try:
+            serializer.is_valid(raise_exception=True)
+        except InvalidToken:
+            token = HttpRequest()
 
         response = Response(serializer.data, status=status.HTTP_200_OK)
 
         return response
     
     def get(self, request):
-        pass
+
+        form = UserLoginForm(request.data)
+
+        data = {
+            'form': form
+        }
+
+        return render(request, 'accounts/login_form.html', data)
     
 
 class PasswordRecoveryView(APIView):
@@ -74,4 +86,11 @@ class PasswordRecoveryView(APIView):
         return response
 
     def get(self, request):
-        pass
+
+        form = UserPassRecForm(request.data)
+
+        data = {
+            'form': form
+        }
+
+        return render(request, 'accounts/passrec.html', data)
