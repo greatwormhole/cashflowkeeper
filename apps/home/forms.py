@@ -1,6 +1,8 @@
 from .models import Transactions, Category
 from django.forms import ModelForm, TextInput, DateInput, Textarea, NumberInput, Select, DateField
-
+from django import forms
+from django.contrib.admin import widgets
+from datetime import date, timedelta, datetime
 # choices = Category.objects.all().values_list('category', 'category')
 
 # choice_list = []
@@ -54,4 +56,14 @@ class EditForm(ModelForm):
                 'placeholder': 'Добавьте категорию'
             }),
         }
+
+class CalendarForm(forms.Form):
+
+    start_date_field = forms.DateField(widget=forms.SelectDateWidget, initial=(date.today() - timedelta(days=7)))
+    end_date_field = forms.DateField(widget=forms.SelectDateWidget, initial=date.today())
+
+    # @classmethod
+    # def change_date_field(cls, start_date_field, end_date_field):
+    #     cls.start_date_field = start_date_field
+    #     cls.end_date_field = end_date_field
 

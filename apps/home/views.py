@@ -1,13 +1,16 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from .models import Transactions, Category
-from .forms import TransactionsForm, EditForm
+from .forms import TransactionsForm, EditForm, CalendarForm
 from django.db.models import Sum, Q, Count
 import pandas as pd
 import datetime
-from datetime import datetime
+from datetime import date, timedelta, datetime
 import json
-
+import numpy as np
+from django.views.generic import TemplateView
+from .charts import objects_to_df, Chart
+from django import forms
 
 def home_page(request):
     # получение текущего года и месяца
@@ -272,7 +275,7 @@ def statistics(request):
                      {'type': 'Outcome', 'perc': str(outcomes_perc)},
                      {'type': 'Investment', 'perc': str(investments_perc)}]
 
-    return render(request, 'home/Statistics.html', {'transaction': transaction, 'min_date': min_date_str,
+    return render(request, 'home/statistics_old.html', {'transaction': transaction, 'min_date': min_date_str,
                                                         'max_date': max_date_str, 'doughnut': doughnut,
                                                         'by_category': by_category, 'total': total,
                                                         'all_type_perc': all_type_perc})
@@ -296,18 +299,241 @@ def profile(request):
 
 
 def create(request):
-    error = ''
-    if request.method == 'POST':
-        form = ProfileForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect('profile')
-        else:
-            error = 'error'
-    form = ProfileForm()
+    # error = ''
+    # if request.method == 'POST':
+    #     form = ProfileForm(request.POST)
+    #     if form.is_valid():
+    #         form.save()
+    #         return redirect('profile')
+    #     else:
+    #         error = 'error'
+    # form = ProfileForm()
+    #
+    # data = {
+    #     'form': form,
+    #     'error': error,
+    # }
+    return render(request, 'home/profile.html')
 
-    data = {
-        'form': form,
-        'error': error,
-    }
-    return render(request, 'home/profile.html', data)
+
+
+PALETTE = ['rgba(117, 223, 177, 1)', 'rgba(217, 94, 94, 1)']
+
+class Statboard(TemplateView):
+    template_name = 'home/statistics_new.html'
+
+    end_date = date.today().strftime('%Y-%m-%d')
+    start_date = (date.today() - timedelta(days=7)).strftime('%Y-%m-%d')
+
+    current_type = 'Income'
+
+
+    def get(self, request, *args, **kwargs):
+        if 'Income' in self.request.GET:
+            context = super().get_context_data(**kwargs)
+
+            end_date = self.end_date
+            start_date = self.start_date
+
+
+            df = objects_to_df(Transactions, date_cols=['%Y-%m-%d', 'date'])
+            df = df[(df['type'] == "Income") & (df['date'] >= start_date) & (df['date'] <= end_date)]
+            context['charts'] = []
+
+            one_side_bar = Chart('bar', chart_id='one_side_bar', palette='rgba(31, 180, 171, 1)')
+            one_side_bar.from_df(df, values='amount', labels=['date'])
+
+            doughnut = Chart('doughnut', chart_id='doughnut', palette=PALETTE)
+            doughnut.from_df(df, values='amount', labels=['category'])
+
+            context['charts'].append(one_side_bar.get_presentation())
+            context['charts'].append(doughnut.get_presentation())
+
+            # Calendar = CalendarForm()
+            # start_date_field = datetime.strptime(start_date, '%Y-%m-%d').date()
+            # end_date_field = datetime.strptime(end_date, '%Y-%m-%d').date()
+            # Calendar.change_date_field(forms.DateField(widget=forms.SelectDateWidget, initial=start_date_field),
+            #                            forms.DateField(widget=forms.SelectDateWidget, initial=end_date_field))
+            # Calendar.start_date_field = forms.DateField(widget=forms.SelectDateWidget, initial=start_date_field)
+            # Calendar.end_date_field = forms.DateField(widget=forms.SelectDateWidget, initial=end_date_field)
+            context['date'] = CalendarForm()
+
+            # total amount
+            total = df['amount'].sum()
+            context['total'] = total
+
+            # change current page
+            self.change_type("Income")
+
+            # by category
+            by_category_df = df.groupby('category', as_index=False).agg({'id': 'count', 'amount': 'sum'})
+            by_category_json = by_category_df.to_json(orient='records')
+            by_category = json.loads(by_category_json)
+            context['by_category'] = by_category
+
+            return render(request, self.template_name, context)
+
+        elif 'Outcome' in self.request.GET:
+            context = super().get_context_data(**kwargs)
+
+            end_date = self.end_date
+            start_date = self.start_date
+
+            df = objects_to_df(Transactions, date_cols=['%Y-%m-%d', 'date'])
+            df = df[(df['type'] == "Outcome") & (df['date'] >= start_date) & (df['date'] <= end_date)]
+
+            context['charts'] = []
+
+            one_side_bar = Chart('bar', chart_id='one_side_bar', palette='rgba(31, 180, 171, 1)')
+            one_side_bar.from_df(df, values='amount', labels=['date'])
+
+            doughnut = Chart('doughnut', chart_id='doughnut', palette=PALETTE)
+            doughnut.from_df(df, values='amount', labels=['category'])
+
+            context['charts'].append(one_side_bar.get_presentation())
+            context['charts'].append(doughnut.get_presentation())
+
+            context['date'] = CalendarForm()
+
+            # total amount
+            total = df['amount'].sum()
+            context['total'] = total
+
+            # change current page
+            self.change_type("Outcome")
+
+            # by category
+            by_category_df = df.groupby('category', as_index=False).agg({'id': 'count', 'amount': 'sum'})
+            by_category_json = by_category_df.to_json(orient='records')
+            by_category = json.loads(by_category_json)
+            context['by_category'] = by_category
+
+            return render(request, self.template_name, context)
+
+        elif 'Investment' in self.request.GET:
+            context = super().get_context_data(**kwargs)
+
+            end_date = self.end_date
+            start_date = self.start_date
+
+            df = objects_to_df(Transactions, date_cols=['%Y-%m-%d', 'date'])
+            df = df[(df['type'] == "Investment") & (df['date'] >= start_date) & (df['date'] <= end_date)]
+
+            context['charts'] = []
+
+            one_side_bar = Chart('bar', chart_id='one_side_bar', palette='rgba(31, 180, 171, 1)')
+            one_side_bar.from_df(df, values='amount', labels=['date'])
+
+            doughnut = Chart('doughnut', chart_id='doughnut', palette=PALETTE)
+            doughnut.from_df(df, values='amount', labels=['category'])
+
+            context['charts'].append(one_side_bar.get_presentation())
+            context['charts'].append(doughnut.get_presentation())
+
+            context['date'] = CalendarForm()
+
+            # total amount
+            total = df['amount'].sum()
+            context['total'] = total
+
+            # change current page
+            self.change_type("Investment")
+
+            # by category
+            by_category_df = df.groupby('category', as_index=False).agg({'id': 'count', 'amount': 'sum'})
+            by_category_json = by_category_df.to_json(orient='records')
+            by_category = json.loads(by_category_json)
+            context['by_category'] = by_category
+
+            return render(request, self.template_name, context)
+
+        return render(request, self.template_name)
+
+
+    def post(self, request, *args, **kwargs):
+        all_data = request.POST
+        start_day = all_data.getlist('start_date_field_day')[0]
+        start_month = all_data.getlist('start_date_field_month')[0]
+        start_year = all_data.getlist('start_date_field_year')[0]
+        end_day = all_data.getlist('end_date_field_day')[0]
+        end_month = all_data.getlist('end_date_field_month')[0]
+        end_year = all_data.getlist('end_date_field_year')[0]
+        start_date = datetime.strptime(f'{start_year}-{start_month}-{start_day}', '%Y-%m-%d').date().strftime('%Y-%m-%d')
+        end_date = datetime.strptime(f'{end_year}-{end_month}-{end_day}', '%Y-%m-%d').date().strftime('%Y-%m-%d')
+
+        self.change_date(start_date, end_date)
+
+        temp_dict = self.request.GET.copy()
+        type = self.current_type
+        temp_dict[type] = type
+        self.request.GET = temp_dict
+
+        return self.get(request, *args, **kwargs)
+
+    @classmethod
+    def change_date(cls, start_date, end_date):
+        cls.start_date = start_date
+        cls.end_date = end_date
+
+    @classmethod
+    def change_type(cls, type):
+        cls.current_type = type
+
+
+class Homeboard(TemplateView):
+    template_name = 'home/homepage_new.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        df = objects_to_df(Transactions, date_cols=['%Y-%m, %B', 'date'])
+        df = df.query('type in ("Income", "Outcome")').groupby(['date', 'type'], as_index=False).agg({'amount': 'sum'})
+        context['charts'] = []
+        multi_side_bar = Chart('bar', chart_id='multi_side_bar', palette=PALETTE)
+        multi_side_bar.from_df(df, values='amount', labels=['date'], stacks='type')
+
+        context['charts'].append(multi_side_bar.get_presentation())
+
+        # total amount by current month
+        df_2 = objects_to_df(Transactions, date_cols=['%Y-%m, %B', 'date']).groupby(['date', 'type'], as_index=False).agg({'amount': 'sum'})
+        current_month = date.today().strftime('%Y-%m, %B')
+        total_by_type_df = df_2.query('date == @current_month')
+        total_by_type_json = total_by_type_df.to_json(orient='records')
+        total_by_type = json.loads(total_by_type_json)
+        context['total_by_type'] = total_by_type
+
+        # increase compared to the previous month
+        today = date.today()
+        if today.month == 1:
+            previous_month = today.replace(year=today.year - 1, month=12)
+        else:
+            previous_month = today.replace(month=today.month - 1)
+        previous_month = previous_month.strftime('%Y-%m, %B')
+        total_by_type_df_previous = df_2.query('date == @previous_month')
+
+        try:
+            increase_income = (total_by_type_df.query('type == "Income"')['amount'].values[0] -
+                               total_by_type_df_previous.query('type == "Income"')['amount'].values[0]) * 100 / total_by_type_df_previous.query('type == "Income"')['amount'].values[0]
+            increase_income = round(increase_income, 1)
+        except:
+            increase_income = 0
+
+        try:
+            increase_outcome = (total_by_type_df.query('type == "Outcome"')['amount'].values[0] -
+                               total_by_type_df_previous.query('type == "Outcome"')['amount'].values[0]) * 100 / total_by_type_df_previous.query('type == "Outcome"')['amount'].values[0]
+            increase_outcome = round(increase_outcome, 1)
+        except:
+            increase_outcome = 0
+
+        try:
+            increase_investment = (total_by_type_df.query('type == "Investment"')['amount'].values[0] -
+                               total_by_type_df_previous.query('type == "Investment"')['amount'].values[0]) * 100 / total_by_type_df_previous.query('type == "Investment"')['amount'].values[0]
+            increase_investment = round(increase_investment, 1)
+        except:
+            increase_investment = 0
+
+        context['increase_income'] = increase_income
+        context['increase_outcome'] = increase_outcome
+        context['increase_investment'] = increase_investment
+
+        return context

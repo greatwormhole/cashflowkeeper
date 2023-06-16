@@ -9,5 +9,6 @@ urlpatterns = [
     path('statistics/', views.statistics, name = 'statistics'),
     path('history/', views.history, name = 'history'),
     path('profile/', views.profile, name = 'profile'),
-
+    path('statistics_new/', views.Statboard.as_view(), name='statistics_new'),
+    path('homepage_new/', views.Homeboard.as_view(), name='homepage_new'),
 ]
