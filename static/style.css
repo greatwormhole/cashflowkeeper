@@ -1,0 +1,733 @@
+@import url(./fonts/fonts.css);
+
+body, .nav, .header, .content, .col {
+    background: #DFF6F6;
+    margin: 0; 
+    padding: 0;
+    font-size: 100%;
+    font-weight: normal;
+}
+
+body {
+    display: block;
+}
+
+* { box-sizing: border-box; }
+
+/* nav */
+
+.nav {
+    position: fixed;
+    width: 15px;
+    height: 100vh;
+    background: #FFFFFF;
+    display: flex;
+    justify-content: center;
+    box-shadow: 0 1px .1em gray;
+    border-radius: 5px;
+    top: 0px;
+    left: 0px;
+    z-index: 10;
+}
+
+.nav:hover {
+    width: 75px;
+    height: 100vh;
+    background: #FFFFFF;
+}
+
+.nav_buttons {
+    padding-top: 20px;
+    display: none;
+}
+
+.nav:hover .nav_buttons {
+    display: flex;
+    flex-direction: column;
+}
+
+.icon {
+    width: 45px;
+    height: 45px;
+    background-color: #F5F5F5;
+    border-radius: 15px;
+    background-size: 70%;
+    background-position: center;    
+    background-repeat: no-repeat;
+    margin: 0 0 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.icon-button {
+    width: 45px;
+    height: 45px;
+    background-color: #F5F5F5;
+    border-radius: 15px;
+    background-size: 70%;
+    background-position: center;    
+    background-repeat: no-repeat;
+    margin: 0 0 20px;
+}
+
+.icon-button:hover:not(.user, .wallet) {
+    background-color: #D9D9D9;
+}
+
+.active:not(.wallet) {
+    background-color: #eaeaea;
+}
+
+.wallet {
+    margin: 0 0 20px;
+    background: #25c7bc;
+    background-image: url(./icons/wallet.png);
+    background-position: bottom 5px;
+    background-size: 80%;
+}
+
+.wallet:hover {
+    background-color: #1FB4AB;
+}
+
+.home {
+    background-image: url(./icons/home.png);
+}
+
+.plus {
+    background-image: url(./icons/plus.png);
+}
+
+.statistics {
+    background-image: url(./icons/statistics.png);
+}
+
+.history {
+    background-image: url(./icons/history.png);
+}
+
+.settings {
+    margin-top: auto;
+    margin-bottom: 20px;
+    background-image: url(./icons/settings.png);
+}
+
+.user {
+    margin-bottom: 20px;
+    border: 0;
+    background: url(./icons/user-icon.png);
+    background-size: cover;
+}
+
+.user_name {
+    display: none;
+    padding: 5px;
+    border-radius: 5px;
+    position: relative;
+    left: 60px;
+    bottom: 5px;
+    background-color: white;
+    background-size: cover;
+    width: fit-content;
+    height: 30px;
+    text-align: center;
+    font-size: 16px;
+}
+
+/* main page */
+
+.main_page_body {
+    background-color: #CBE4E4;
+}
+
+.main_page_header {
+    padding:  30px 50px;
+    border-color: black;
+    box-shadow: 2px .1em gray;
+    height: 90px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 20px;
+}
+
+.wallet_icon_main_page {
+    width: 45px;
+    height: 45px;
+    border-radius: 15px;
+    background: #25c7bc;
+    background-image: url(./icons/wallet.png);
+    background-position: bottom 5px;
+    background-size: 80%;
+}
+
+.user_icon_main_page {
+    position: absolute;
+    right: 100px;
+    width: 45px;
+    height: 45px;
+    border-radius: 100%;
+    border: 0;
+    background: url(./icons/user-icon.png);
+    background-size: cover;
+    box-shadow: 1px 1px .1em gray;
+}
+
+.leng_button {
+    position: absolute;
+    width: 32px;
+    height: 32px;
+    right: 40px;
+    background-color: #CBE4E4;
+    background-image: url(./icons/lengicon.png);
+    background-position: 4px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    border: 1px solid #9b9b9b;
+    border-radius: 10px;
+}
+
+.action_get_app {
+    position: absolute;
+    background-color: #000;
+    color: white;
+    box-shadow: 0 2px .1em gray;
+    right: 190px;
+}
+
+
+/* header */
+
+.header, .content{
+    margin-top: 17px;
+    max-width: 1150px;
+    padding-left: 100px;
+    margin-right: 50px;
+}
+
+.header {
+    display: inline-flex;
+}
+
+.text {
+    margin: 0;
+    padding: 0;
+    font-family: Inter, Arial, sans-serif;
+    font-style: normal;
+}
+
+.greetings {
+    font-size: 30px;
+    font-weight: 400;
+    min-width: fit-content;
+    padding-right: 7px;
+}
+
+.greeting_name {
+    font-size: 30px;
+    font-weight: 700;
+}
+
+.annotation {
+    font-size: 20px;
+    color: #00000091;
+}
+
+/* content */ 
+
+.content {
+    width: 90%;
+    display: grid;
+    grid-template-columns: repeat(6, auto);
+    grid-template-rows: repeat(3, auto);
+}
+
+.widget {
+    position: relative;
+    background-color: #ffffff;
+    border-radius: 15px;
+    margin: 15px 25px 30px 0;
+    min-width: 195px;
+    padding: 20px 15px 15px;
+}
+
+.pie_chart_widget{
+    position: relative;
+    margin: 15px 25px 30px 0;
+    padding: 20px 15px 15px;
+}
+
+.incomes, .outcomes, .investments, .chart_period, .change_chart{
+    grid-column: span 2;
+    grid-row: span 1;
+}
+
+.total-analysis,  .add_income, .add_outcome, .add_investment  {
+    grid-column: span 2;
+    grid-row: span 4;
+}
+
+.histogram, .manage, .last_added, .full_history {
+    grid-column: span 6;
+    height: fit-content;
+    max-width: 1150px;
+}
+
+.change_settings, .bar_chart, .pie_chart_widget {
+    grid-column: span 4;
+}
+
+.chart_period, .change_chart {
+    height: 150px;
+}
+
+
+
+
+
+
+/* home page */
+
+.illustration {
+    display: inline-block;
+    position: absolute;
+    top: 10px;
+    right: 12px;
+}
+
+.changing-numbers {
+    margin-top: 30px;
+}
+
+.percent-number {
+    margin-left: 10px;
+    font-size: 14px;
+    font-weight: 400;
+}
+
+.change_settings {
+    display: block;
+    max-width: 400px;
+    grid-row: span 3;
+}
+
+.change_user_info {
+    display: block;
+    max-width: 400px;
+    grid-row: span 3;
+    min-width: 300px;
+}
+
+.user_info {
+    padding-top: 30px;
+}
+
+.horizontal_items {
+    display: flex;
+    flex-direction: row;
+}
+
+/* table */
+
+.full_history {
+    height: fit-content;
+    min-width: 500px;
+} 
+
+.header_row {  
+    list-style-type:none;
+    display: grid;
+    height: 40px;
+    grid-template-columns: minmax(50px, 15%) minmax(92px, 30%) minmax(80px, 20%) minmax(80px, 30%) minmax(80px, 5%);  
+    grid-gap: 5px;
+    padding: 10px 5px 10px 20px ;
+
+    background: rgba(200, 200, 200, 0.37);    
+    border-radius: 15px;
+    margin-bottom: 10px;
+}
+
+.history_row {
+    list-style-type:none;
+    display: grid;
+    grid-template-columns: minmax(50px, 15%) minmax(92px, 30%) minmax(80px, 20%) minmax(80px, 30%) minmax(80px, 5%);  
+    grid-gap: 5px;
+    padding: 10px 5px 10px 20px ;
+    margin-bottom: 0;    
+}
+
+.history_block {
+    margin-top: 20px;
+}
+
+.history_col {
+    margin-right: 10px;
+}
+
+.date_col {   
+    min-width: 40px;
+}
+
+.amount_col, .delete_col {
+    min-width: 70px;
+}
+
+.category_col, .comment_col {
+    min-width: 87px;
+}
+
+.action_delete_row {
+    background-color: #ff5171;
+    margin-right: 0 5px;
+}
+
+.action_delete_row:hover {
+    background-color: #ec4a68;
+}
+
+/* analysis */
+
+.change_period_block {
+    margin: 23px 0 15px;
+}
+
+.date_input {
+    margin-top: -5px;
+    position: absolute;
+    margin-left: 30%;
+    width: 60%;
+}
+
+.total-numbers {
+    margin: 20px 0 30px;
+}
+
+.total_percent_number {
+    color: #1db171;
+}
+
+.analisys_icon {
+    width: 45px;
+    height: 45px;
+    border-radius: 15px;
+    background-size: 70%;
+    background-position: center;    
+    background-repeat: no-repeat;
+    margin: 0 10px 0 0;
+    background-color: rgba(80, 174, 7, 0.25);;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.category {
+    display: flex;
+    justify-content: left;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.total_analysis_block {
+    margin-right: 10px;
+    margin-bottom: 20px;
+}
+
+.analysis_number {
+    margin-left: auto;
+    margin-right: 10px;
+}
+
+.analysis_text {
+    font-size: 16px;
+    font-weight: 500;
+    width: fit-content;
+}
+
+
+
+
+
+/* settings */
+
+.info_block {
+    margin: 0 20px 40px;
+}
+
+.info_user_name, .info_user_surname, .info_user_mail, .info_user_country {
+    position: absolute;
+    margin-left: 30%;
+}
+
+/* buttons */
+
+.button_action {
+    padding: 5px;
+    min-width: 80px;
+    width: fit-content;
+    border-radius: 10px;
+    display: block;
+    border: 1px solid #000;
+}
+
+.button-text {
+    font-size: 16px;
+    font-weight: 500px;
+}
+
+.action_upload{
+    margin: 20px auto 60px;
+    background-color: #25c7bc;
+}
+
+.action_add {
+    margin: 30px auto 20px;
+    background-color: #25c7bc;
+}
+
+.action_add:hover {
+    background-color: #1FB4AB;
+}
+
+.action_upload:hover {
+    background-color: #1FB4AB;
+}
+
+.action_delete_account {
+    background-color: #ff5171;
+    margin: 90px auto 20px;
+}
+
+.action_delete_account:hover {
+    background-color: #ec4a68;
+}
+
+.user_icon {
+    display: block;
+    margin: 30px auto;
+    width: 100px;
+}
+
+.display_theme_button {
+    width: 32px;
+    height: 32px;
+    right: 30px;
+    background: white;
+    background-image: url(./icons/arrows.png);
+    background-position: center;
+    background-size: contain;
+    background-repeat: no-repeat;
+    border: 1px solid #9b9b9b;
+    border-radius: 10px;
+}
+
+.display_theme_button:hover {
+    background-color: #ededed;
+}
+
+/* adding */
+
+.adding_block {
+    margin-top: 20px;
+}
+
+.input_style {
+    border-width: 1px;
+    border-top: none;
+    border-left: none;
+    border-right: none;
+}
+
+.input_text {
+    text-transform: uppercase;
+    font-size: 16px;
+    font-weight: 500;
+    color: #989292;
+}
+
+.add_input {
+    margin: 20px 0;
+    width: 90%;
+}
+
+.add_input::placeholder {
+    font-family: Inter, Arial, sans-serif;
+    font-style: normal;
+    text-transform: uppercase;
+    font-size: 16px;
+    font-weight: 500;
+    color: #989292;
+}
+
+.input_password {
+    margin: 0 20px 30px;
+    width: 85%;
+}
+
+.input_password::placeholder {
+    font-family: Inter, Arial, sans-serif;
+    font-style: normal;
+    font-size: 16px;
+    font-weight: 700;
+    color: black;
+}
+
+.change_display {
+    display: inline-block;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}
+
+.little_tag_select {
+    display: inline-block;
+    position: absolute;
+    border-radius: 10px;
+    height: 30px;
+}
+
+.change_time_axis {
+    width: 90px;
+    top: 0;
+    right: 130px;
+}
+
+.change_time_period {   
+    width: 123px; 
+    top: 0;
+    right: 0;
+}
+
+select {
+    font-family: Inter, Arial, sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    color: #00000091;
+}
+
+
+
+
+
+
+
+.title-text {
+    font-size: 20px;
+    font-weight: 700;
+}
+
+.info-text {
+    font-size: 16px;
+    font-weight: 700;
+    width: fit-content;
+}
+
+.anchor-text {
+    color: #1FB4AB;
+}
+
+.expense_nav {
+    position: fixed;
+    background-color: #fff;
+    top: 0;
+    right: 0;
+    width: 0; 
+    height: 100vh;
+    display: flex;
+    box-shadow: 0 1px .1em gray;
+    border-radius: 5px;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+::-webkit-scrollbar {
+    width: 0;
+}
+
+.expense_button {
+    z-index: 2;
+    position: absolute;
+    width: 35px;
+    height: 35px;
+    right: 15px;
+    top: 15px;
+    background: white;
+    box-shadow: 3px 3px .2em gray;
+    background-image: url(./icons/arrows.png);
+    background-position: center;
+    background-repeat: no-repeat;
+    border: 1px solid #C8C8C8;
+    border-radius: 10px;
+}
+
+.expense_button:hover {
+    background-color: #ededed;
+}
+
+.expense_nav_info {
+    padding-top: 27px;
+    padding-left: 17px;
+    flex-direction: column; 
+}
+
+.card {
+    width: 256px;
+    height: 165px;
+    filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.15));
+    background: #1FB4AB;
+    border-radius: 15px;
+    margin: 20px -2px 25px;
+}
+
+.recent-activity-title {
+    display: flex;
+}
+
+.right-placed {
+    position: absolute;
+    margin-left: 200px;
+    margin-top: -3px;
+}
+
+.recent-activity {
+    display: flex;
+    flex-direction: column;
+    padding-top: 20px;
+}
+
+.recent-block-template {
+    display: flex;
+    flex-direction: row;
+    width: 295px;
+}
+
+.recent-block-activity {
+    width: 295px;
+}
+
+.adding-info {
+    margin: 0;
+    padding: 0;
+    width: 150px;
+    margin-left: 12px;
+}
+
+.adding-info-annotation {
+    margin: 0;
+    padding: 0;
+    margin-top: 4px;
+    font-size: 14px;
+    font-weight: 700;
+    color: #00000091;
+}
+
+.number {
+    padding: 0;
+    font-weight: 500;
+    color: #787878;
+}
+
+.flex_container {
+    display: flex;
+    margin-top: 5px;
+}

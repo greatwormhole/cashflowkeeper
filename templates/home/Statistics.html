@@ -1,0 +1,166 @@
+{% load static %}
+<!doctype html>
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Statistics</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
+  <script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe" crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="{% static "normalize.css" %}">
+  <link rel="stylesheet" href="{% static "style.css" %}">
+</head>
+<body>
+    <div class="nav">
+        <div class="nav_buttons">
+        <a class="icon-button wallet" href="{% url 'main' %}" title="CashFlowKeeperMainPage"></a>
+        <a class="icon-button active home" href="{% url 'home' %}" title="HomePage"></a>
+        <a class="icon-button plus" href="{% url 'add' %}" title="Add"></a>
+        <a class="icon-button statistics" href="{% url 'statistics' %}" title="Statistics"></a>
+        <a class="icon-button history" href="{% url 'history' %}" title="History"></a>
+        <a class="icon-button settings" href="{% url 'profile' %}" title="ProfileAndSettings"></a>
+            <button class="icon user"><h3 class="user_name"></h3></button>
+        </div>
+    </div>
+    <header class="header">
+        <div class="container">
+            <div class="row">
+                <h2 class="col text greetings">
+                    Analyze your operations,
+                </h2>
+                <h2 class="col text greeting_name">
+                </h2>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <h5 class="text annotation">Here are the statistics of your operations</h5>
+                </div>
+            </div>
+    </header>
+        
+    <section class="content"> 
+        <div class="widget chart_period">
+            <h4 class="text info-text">Period</h4>  
+            <div class="change_period_block horizontal_items">
+                <h4 class="text info-text">From</h4>                
+                <input type="date" name="date_from" id="date_from" class="input_style date_input">
+            </div>  
+            <div class="change_period_block horizontal_items">
+                <h4 class="text info-text">To</h4>
+                <input type="date" name="date_to" id="date_to" class="input_style date_input">
+            </div>
+        </div>
+        <div class="widget change_chart">
+            <div class="horizontal_items">
+                <h4 class="text info-text">Incomes</h4> 
+                <button class="display_theme_button right-placed"></button>
+            </div>
+        </div>
+        <div class="widget total-analysis">
+            <h4 class="text info-text">Total</h4> 
+            <p class="total-numbers"><span class="text title-text total_number"> $30958</span><span class="text percent-number total_percent_number"> +2.5 </span></p>
+            <div class="total_analysis_block">
+                <div class="category horizontal_items">
+                    <div class="analisys_icon">  
+                    <img src="../icons/clothes.png" alt="" class="image">
+                    </div> 
+                    <h4 class="text info-text analysis_text">Supermarkets</h4>
+                </div>
+                <div class="category horizontal_items">
+                <h5 class="text analysis_text">5 operations</h5>
+                <h5 class="text analysis_text analysis_number">$5</h5>
+                </div>
+            </div>
+            <div class="total_analysis_block">
+                <div class="category horizontal_items">
+                    <div class="analisys_icon">  
+                    <img src="../icons/sport.png" alt="" class="image">
+                    </div> 
+                    <h4 class="text info-text analysis_text">Sport</h4>
+                </div>
+                <div class="category horizontal_items">
+                <h5 class="text analysis_text">5 operations</h5>
+                <h5 class="text analysis_text analysis_number">$5</h5>
+                </div>
+            </div>
+            <div class="total_analysis_block">
+                <div class="category horizontal_items">
+                    <div class="analisys_icon">  
+                    <img src="../icons/education.png" alt="" class="image">
+                    </div> 
+                    <h4 class="text info-text analysis_text">Education</h4>
+                </div>
+                <div class="category horizontal_items">
+                <h5 class="text analysis_text">5 operations</h5>
+                <h5 class="text analysis_text analysis_number">$5</h5>
+                </div>
+            </div>
+            <div class="total_analysis_block">
+                <div class="category horizontal_items">
+                    <div class="analisys_icon">  
+                    <img src="../icons/entertainment_colored.png" alt="" class="image">
+                    </div> 
+                    <h4 class="text info-text analysis_text">Entertainment</h4>
+                </div>
+                <div class="category horizontal_items">
+                <h5 class="text analysis_text">5 operations</h5>
+                <h5 class="text analysis_text analysis_number">$5</h5>
+                </div>
+            </div>
+            <div class="total_analysis_block">
+                <div class="category horizontal_items">
+                    <div class="analisys_icon">  
+                    <img src="../icons/health.png" alt="" class="image">
+                    </div> 
+                    <h4 class="text info-text analysis_text">Health</h4>
+                </div>
+                <div class="category horizontal_items">
+                <h5 class="text analysis_text">5 operations</h5>
+                <h5 class="text analysis_text analysis_number">$5</h5>
+                </div>
+            </div>
+        </div>
+
+        
+        <div class="widget bar_chart">
+            <h4 class="text info-text">Bar chart</h4>  
+        </div>
+        <div class="pie_chart_widget pie_chart">
+            <h4 class="text info-text">Pie chart</h4>  
+        </div>
+
+    </section>
+    <button class="expense_button"></button>
+    <div class="expense_nav">
+        <div class="expense_nav_info">
+            <h3 class="text title-text"> Extense account </h3>
+            <div class="card">
+            </div>
+                <div class="recent-activity-title">
+                    <h4 class="text info-text">
+                        Recent Activity
+                    </h4>
+                    <a href="history" class="text anchor-text right-placed">See all</a>
+                </div>
+                <div class="recent-activity">
+                <div class="recent-block">
+                    <template class="recent-block-template">
+                    <div class="flex_container">
+                        <div class="icon">
+                        <img src="" alt="" class="image">
+                        </div>
+                        <div class="adding-info">
+                        <h4 class="text info-text"></h4>
+                        <h5 class="text adding-info-annotation"></h5>
+                        </div>
+                    <div class="text right-placed annotation number">
+                </div>
+                </div>
+            </template>
+            </div>
+        </div>
+        </div>
+    </div>
+<script src="{% static "script.js" %}"></script>
+</body>
+</html>
